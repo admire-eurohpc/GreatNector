@@ -17,14 +17,57 @@ parameterAssegniment = function(optim_v=NULL,index){
 
 error<-function(reference, output)
 {
-  reference[1,] -> times_ref
-  reference[3,] -> infect_ref
   
-  # We will consider the same time points
-  Infect <- output[which(output$Time %in% times_ref),"I"]
-  infect_ref <- infect_ref[which( times_ref %in% output$Time)]
+  colnames(reference) = c("GPU" ,"MPI", "OTHER", "IO")
   
-  diff.Infect <- 1/length(times_ref)*sum(( Infect - infect_ref )^2 )
+  n_sim_tot<-table(output$Time)
+  n_sim <- n_sim_tot[1]
+  time_delete<-as.numeric(names(n_sim_tot[n_sim_tot!=n_sim_tot[1]]))
   
-  return(diff.Infect)
+  if(length(time_delete)!=0) output = output[which(output$Time!=time_delete),]
+  
+  output$ID <- rep(1:n_sim[1],each = length(unique(output$Time)) )
+  
+  ### Let's calculate the mean and median time the token stays in the place
+  unit.time =  unique(diff(output[output$ID == 1, "Time"]))
+  interval.time = 60 * unit.time 
+  output$IntervalTime = output$Time %/% interval.time
+  # tolgo intervlli di tempi non multipli di quello definito
+  n_int_tot<-table(output$IntervalTime)
+  time_delete<-as.numeric(names(n_int_tot[n_int_tot!=n_int_tot[1]]))
+  if(length(time_delete)!=0) output = output[which(output$IntervalTime!=time_delete),]
+  
+  output.final <-  sapply(unique(output$ID),function(i){
+    out.tmp = output[output$ID == i, ]
+
+    SpendingTime = sapply(colnames(out.tmp)[-which( colnames(out.tmp)%in% c("ID","Time","IntervalTime"))],function(c)
+    {
+      
+      MeanUsageTime = sapply(unique(out.tmp$IntervalTime), function(it) 
+        sum(out.tmp[out.tmp$IntervalTime == it,c])/interval.time
+      )
+    
+      mean(MeanUsageTime)
+      #r = rle(out.tmp[,c])
+      #index0 = which(r[[2]] == 1)
+      #time = r[[1]][index1]/sum(r[[1]][index1])
+      #mean(time)
+    })
+    
+    return(SpendingTime)
+  })
+  
+  MeanTime = apply(output.final,1,mean)
+  
+  err = sum(abs(MeanTime[names(MeanTime)] - reference[,names(MeanTime)])*10)
+  
+  return(err)
 }
+
+# output <- read.csv("HPCmodel_calibration/HPCmodel-calibration-1.trace",sep = "")
+# reference <- as.data.frame(t(read.csv("Input/reference.csv", header = FALSE, sep = "")))
+
+
+
+
+
