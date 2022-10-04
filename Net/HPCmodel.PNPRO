@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- This project file has been saved by the New GreatSPN Editor, v.100 --><project name="HPCmodel" version="121">
+  <gspn name="QueueModel" view-rates="false">
+    <nodes>
+      <place domain="QS" label-x="4.5" label-y="0.0" name="IOQueue" x="37.0" y="19.0"/>
+      <color-var domain="state" name="x" x="1.125" y="4.0"/>
+      <color-class definition="gpu{1..1} is GPU +mpi{2..2} is MPI + other{3..3} is OTHER +  io{4..4} is IO" name="state" x="1.4375" y="2.0"/>
+      <color-var domain="state" name="y" x="1.25" y="5.0"/>
+      <place label-x="-4.0" label-y="0.0" marking="2" name="ChangingState" x="25.0" y="19.0"/>
+      <transition guard="x in IO" guard-x="-2.0" guard-y="0.0" label-x="3.0" label-y="0.0" name="IO_choice" nservers-x="0.5" type="EXP" x="31.55" y="23.0"/>
+      <place domain="queue" marking="1&lt;Q0&gt;" name="QueueAdd" x="31.0" y="27.0"/>
+      <color-class definition="circular q0{1..1} is Q0 + q1{1..1} is Q1" name="queue" x="0.9375" y="1.0"/>
+      <color-var domain="queue" name="q" x="6.6875" y="4.0"/>
+      <color-class definition="state * queue" name="QS" x="15.9375" y="4.0"/>
+      <transition label-x="2.5" label-y="0.0" name="IO_run" nservers-x="0.5" type="EXP" x="31.55" y="15.0"/>
+      <place domain="queue" label-x="1.0" label-y="-1.5" marking="1&lt;Q0&gt;" name="QueueRemove" x="31.0" y="11.0"/>
+      <place domain="state" name="Running" x="11.0" y="19.0"/>
+      <transition guard="x !in IO" label-x="-3.5" label-y="0.0" name="State_choice" nservers-x="0.5" type="EXP" x="18.55" y="23.0"/>
+      <transition label-x="-3.0" label-y="-0.5" name="State_run" nservers-x="0.5" type="EXP" x="18.55" y="15.0"/>
+    </nodes>
+    <edges>
+      <arc head="IO_choice" kind="INPUT" mult-x="0.5" tail="ChangingState"/>
+      <arc head="IOQueue" kind="OUTPUT" mult="&lt;x,q&gt;" mult-x="0.0" mult-y="-1.0" tail="IO_choice"/>
+      <arc head="IO_choice" kind="INPUT" mult="&lt;q&gt;" mult-x="1.1061521844475912" mult-y="0.11507825244192738" tail="QueueAdd">
+        <point x="34.5" y="26.0"/>
+      </arc>
+      <arc head="QueueAdd" kind="OUTPUT" mult="&lt;q++&gt;" mult-k="0.90009765625" mult-x="-1.2915406121201833" mult-y="0.07361508155196717" tail="IO_choice">
+        <point x="30.0" y="25.5"/>
+      </arc>
+      <arc head="IO_run" kind="INPUT" mult="&lt;x,q&gt;" tail="IOQueue"/>
+      <arc head="ChangingState" kind="OUTPUT" tail="IO_run"/>
+      <arc head="IO_run" kind="INPUT" mult="&lt;q&gt;" tail="QueueRemove">
+        <point x="34.0" y="13.5"/>
+      </arc>
+      <arc head="QueueRemove" kind="OUTPUT" mult="&lt;q++&gt;" mult-k="1.09658203125" mult-x="-0.7638392265767457" mult-y="0.5000963838215569" tail="IO_run">
+        <point x="30.0" y="14.0"/>
+      </arc>
+      <arc head="State_choice" kind="INPUT" mult-x="0.5" mult-y="0.5" tail="ChangingState"/>
+      <arc head="Running" kind="OUTPUT" mult="&lt;x&gt;" mult-k="1.2532226562500002" mult-x="0.5" mult-y="-0.5" tail="State_choice">
+        <point x="16.50283203125" y="22.573046875"/>
+      </arc>
+      <arc head="State_run" kind="INPUT" mult="&lt;x&gt;" mult-x="0.0" tail="Running"/>
+      <arc head="ChangingState" kind="OUTPUT" mult-x="0.5" mult-y="-0.5" tail="State_run"/>
+    </edges>
+  </gspn>
   <gspn name="Unfolding of PetriNet" zoom="75">
     <nodes>
       <place label-x="-0.6012699999999995" label-y="-1.6012700000000004" name="GPU" x="19.60127" y="10.60127"/>
