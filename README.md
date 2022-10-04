@@ -32,9 +32,16 @@ it can be installed following the steps showed therein;
 <img src="./FiguresReadME/Workflow.png" class="center" style="display: block; margin: auto;" />
 
 
-# The Petri Net model
+# CLUSTERIZATION
 
-## One application without queue
+<img src="./FiguresReadME/kmeans.png" class="center" style="display: block; margin: auto;" />
+<p class="caption">
+Clusterization using the Kmeans algorithm of a log trace.
+</p>
+
+# CALIBRATION
+
+## Petri Net model: One application without queue
 
 We defined a siple scenario to start the analysis. As depicted in the Petri Net graph, we have defined that a process might be in four possible states: IO, CPU, MPI, OTHER. In the first graph, we are considering a more compact version of the model by exploiting the Stochastic Symmetric Net, otherwise in second image we have the same model but unfolded (i.e., without colors).
 
@@ -47,4 +54,15 @@ Stochastic Symmetric Net representation of the model.
 <p class="caption">
 The unfolded representation of the model.
 </p>
+
 ## Calibration
+
+<img src="FiguresReadME/Cluster1Calib.png" style="display: block; margin: auto;" class="center" />
+<p class="caption">
+Calibration w.r.t. the first Kmeans cluster.
+</p>
+
+<img src="FiguresReadME/Cluster2Calib.png" style="display: block; margin: auto;" class="center" />
+<p class="caption">
+Calibration w.r.t. the second Kmeans cluster.
+</p>
