@@ -11,7 +11,7 @@ paramsName = c("Change_gpu_mpi" ,"Change_gpu_other","Change_gpu_io",
                "Change_other_gpu","Change_other_mpi","Change_other_io",
                "Change_io_gpu","Change_io_mpi","Change_io_other",
                "Change_gpu_gpu","Change_mpi_mpi","Change_io_io","Change_other_other")
-params = rep(0,length(paramsName))
+params = rep(0,length(paramsName) )
 names(params) = paramsName
 
 # from OTHER to ...
@@ -31,5 +31,26 @@ model.analysis(solver_fname = "./Net/HPCmodel.solver",
                i_time = 0,
                n_run = 100,
                solver_type = "SSA",
+               parallel_processors = 5,
                ini_v = params) #debug = T )
+
+
+
+### Calibration 
+
+model.calibration(solver_fname = "./Net/HPCmodel.solver",
+                  parameters_fname = "Input/parametersList.csv",
+                  functions_fname = "./RFunction/Functions.R",
+                  reference_data = "./Input/ReferenceCl2.csv",
+                  distance_measure = "error",
+                  parallel_processors = 10,
+                  f_time = 5*60, # simulo 5 minuti
+                  s_time = 1,
+                  i_time = 0,
+                  n_run = 500,
+                  lb_v = rep(0,length(paramsName)),
+                  ub_v = rep(1,length(paramsName)),
+                  ini_v = rep(0.5,length(paramsName)),
+                  solver_type = "SSA"
+                  ) #debug = T )
 

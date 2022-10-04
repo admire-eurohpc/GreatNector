@@ -1,5 +1,7 @@
+## Set the cluster traces to plot
+cl = 2
 
-calibration_optim_trace <-read.csv("./HPCmodel_calibration/HPCmodel-calibration_optim-config.csv",
+calibration_optim_trace <-read.csv(paste0("./HPCmodel_calibration_CL",cl,"/HPCmodel-calibration_optim-config.csv"),
                                    sep = "")
 
 # Then, we read all the trajectories generated saving them in a list called
@@ -9,12 +11,19 @@ calibration_optim_trace <-read.csv("./HPCmodel_calibration/HPCmodel-calibration_
 
 
 calibration_optim_trace = calibration_optim_trace[order(calibration_optim_trace$distance),]
-id.traces<-which.min(calibration_optim_trace$distance)
 
-paste(calibration_optim_trace[id.traces,-c(1:2)],collapse = ",")
-#unlist(calibration_optim_trace[id.traces,-c(1:2)] )->optimC
+# To remove all the traces from the calibration without the best one.
+
+# file.remove(paste0("./HPCmodel_calibration_CL",cl,"/HPCmodel-calibration-",
+#                    calibration_optim_trace[2:length(calibration_optim_trace$distance),2],".trace"))
+
 
 source('./RFunction/PlotGeneration.R')
-ModelAnalysisPlot(tracefile = paste0("./HPCmodel_calibration/HPCmodel-calibration-",calibration_optim_trace[id.traces,2],".trace"))
+
+ModelAnalysisPlot(
+  tracefile = paste0("./HPCmodel_calibration_CL",cl,"/HPCmodel-calibration-",calibration_optim_trace[1,2],".trace"),
+  referencefile = paste0("Input/ReferenceCl",cl,".csv"),
+  Namefile = paste0("CL",cl)
+  )
 
 

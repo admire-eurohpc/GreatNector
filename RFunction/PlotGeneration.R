@@ -3,7 +3,7 @@ library(ggplot2)
 library(ggthemes)
 library(dplyr)
 
-ModelAnalysisPlot <-function(tracefile){
+ModelAnalysisPlot <-function(tracefile,referencefile,Namefile = ""){
   # PlaceNotToPlot = c()
   PlaceNotToPlot = c( )
   
@@ -17,7 +17,7 @@ ModelAnalysisPlot <-function(tracefile){
   # Reference!!!!
   library(readr)
   
-  reference <- as.data.frame(t(read.csv("Input/reference.csv", header = FALSE, sep = "")))
+  reference <- as.data.frame(t(read.csv(referencefile, header = FALSE, sep = "")))
   colnames(reference) = c("GPU" ,"MPI", "OTHER", "IO")
   
   reference = reference %>% tidyr::gather(key = "Jobs", value = "Value")
@@ -58,8 +58,8 @@ ModelAnalysisPlot <-function(tracefile){
     distinct()
   
   pl = ggplot(output.final) +
-    geom_bar(aes(x = factor(TimeInterval),y = MeanTime,fill = Jobs),stat = "identity")+
-    geom_bar(data = reference, aes(x = "Reference", y = Value,fill = Jobs),col = "red",stat = "identity")+
+    geom_bar(aes(x = TimeInterval,y = MeanTime,fill = Jobs),stat = "identity")+
+    #geom_bar(data = reference, aes(x = "Reference", y = Value,fill = Jobs),col = "red",stat = "identity")+
     theme(axis.text=element_text(size=10),
           axis.title=element_text(size=14,face="bold"),
           legend.text=element_text(size=10),
@@ -69,10 +69,11 @@ ModelAnalysisPlot <-function(tracefile){
           legend.key.width = unit(1.3,"cm") )+
     labs(x="", y="")
   
-  ggsave(pl,filename = "BarTraceSimulated.pdf",device = "pdf",path = "Plots",width = 10,height = 6)
+  ggsave(pl,filename = paste0(Namefile,"_BarTraceSimulated.png"),
+         device = "png",path = "Plots",width = 10,height = 6)
   
   pl = ggplot(output.final.all) + 
-    geom_line(aes(x = TimeInterval,y = MeanUsageTime,group = ID),col = "grey", alpha = .3) +
+    geom_boxplot(aes(x =TimeInterval, group = TimeInterval,y = MeanUsageTime),col = "grey", alpha = .3) +
     geom_line(data = output.final, 
               aes(x = TimeInterval,y = MeanTime, col = Jobs,linetype = "Mean"), alpha = .9) +
     geom_hline(data = reference, aes(yintercept = Value,col = Jobs,linetype = "Reference"),size = 1)+
@@ -81,7 +82,7 @@ ModelAnalysisPlot <-function(tracefile){
   
   pl
   
-  ggsave(pl,filename = "LinesTraceSimulated.pdf",device = "pdf",path = "Plots",width = 10,height = 6)
+  ggsave(pl,filename = paste0(Namefile,"_LinesTraceSimulated.png"),device = "png",path = "Plots",width = 10,height = 6)
   
   
   return(pl)
