@@ -38,8 +38,13 @@ it can be installed following the steps showed therein;
 
 We defined a siple scenario to start the analysis. As depicted in the Petri Net graph, we have defined that a process might be in four possible states: IO, CPU, MPI, OTHER. In the first graph, we are considering a more compact version of the model by exploiting the Stochastic Symmetric Net, otherwise in second image we have the same model but unfolded (i.e., without colors).
 
-<img src="./FiguresReadME/SSN.png" width="295" style="display: block; margin: auto;" />
+<img src="./FiguresReadME/SSN.png" style="display: block; margin: auto;" />
+<p class="caption">
+Stochastic Symmetric Net representation of the model.
+</p>
 
-<img src="./FiguresReadME/SPN.png" width="295" style="display: block; margin: auto;" />
-
+<img src="./FiguresReadME/SPN.png" style="display: block; margin: auto; class="center"" />
+<p class="caption">
+The unfolded representation of the model.
+</p>
 ## Calibration
