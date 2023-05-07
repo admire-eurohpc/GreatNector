@@ -1,22 +1,34 @@
-InitGeneration <- function(n_file,optim_v=NULL, ini = NULL)
+InitGeneration <- function(n_file,optim_v=NULL, applications)
 {
   yini.names <- readRDS(n_file)
-
+  
   y_ini <- rep(0,length(yini.names))
   names(y_ini) <- yini.names
   
-  #index = sample(1:length(y_ini),size = 1)
-  y_ini["ChangingState"] = 10
+  index = sample(1:length(y_ini),size = 1)
   
-  y_ini["QueueRemove_q01"] = 1
-  y_ini["QueueAdd_q01"] = 1
-  y_ini["NumberOfParallel"] = 30
+  if( length(applications) <= length(grep(pattern = "SystemProcesses",x = yini.names)) ){
+    for(i in 1:length(applications))
+      y_ini[paste0("SystemProcesses_n1_app",i)] = applications[[i]]
+  }else{
+    stop("The number of applications passed for the marking are greater than the number of colors in the App color class.")
+  }
   
   return( y_ini )
 }
 
-parameterAssegniment = function(optim_v=NULL,index){
-  return(optim_v[index])
+TimeTable_generation = function(optim_v=NULL, pathReference, indexes ){
+  # pathReference = "Input/Reference/dfProva.RDs"
+  # indexes = list(State_start_mpi = c(1,2), State_start_other = c(3,4))
+  # the first transition must be related to mpi!!!
+  
+  df = readRDS(pathReference)
+  M = data.frame(Time = df[,"Time"])
+  # indexes is a list that associates the transitions with a set of indexes for the parameters.
+  for(i in names(indexes)){
+    M[,paste(i)] = optim_v[ indexes[[i]] ]
+  }
+  return(M)
 }
 
 error<-function(reference, output)
@@ -42,14 +54,14 @@ error<-function(reference, output)
   
   output.final <-  sapply(unique(output$ID),function(i){
     out.tmp = output[output$ID == i, ]
-
+    
     SpendingTime = sapply(colnames(out.tmp)[-which( colnames(out.tmp)%in% c("ID","Time","IntervalTime"))],function(c)
     {
       
       MeanUsageTime = sapply(unique(out.tmp$IntervalTime), function(it) 
         sum(out.tmp[out.tmp$IntervalTime == it,c])/interval.time
       )
-    
+      
       mean(MeanUsageTime)
       #r = rle(out.tmp[,c])
       #index0 = which(r[[2]] == 1)
