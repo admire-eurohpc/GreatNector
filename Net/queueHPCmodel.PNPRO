@@ -7,18 +7,18 @@
       <color-class definition="mpi{2..2} is MPI + other{3..3} is OTHER " name="State" x="1.0" y="2.125"/>
       <color-var domain="State" name="y" x="1.25" y="35.0"/>
       <place domain="N_A" label-x="2.5" label-y="-1.5" marking="1&lt;n1,app1&gt;" name="SystemProcesses" x="22.0" y="19.0"/>
-      <transition delay="Call[&quot;IO_queue_general&quot;]" guard-x="-2.0" guard-y="0.0" label-x="0.5" name="IO_queue" nservers-x="0.5" type="EXP" x="32.55" y="24.0"/>
+      <transition delay="Call[&quot;IO_queue_general&quot;,FromTimeTable[&quot;IO_queue&quot;, 0, 0]]" guard-x="-2.0" guard-y="0.0" label-x="0.5" name="IO_queue" nservers-x="0.5" type="EXP" x="32.55" y="24.0"/>
       <place domain="Queue" marking="1&lt;Q0&gt;" name="QueueAdd" x="32.0" y="28.0"/>
       <color-class definition="circular q0{1..1} is Q0 + q1{1..1} is Q1 + q2{1..1} is Q2 + q3{1..1} is Q3 + q4{1..1} is Q4 " name="Queue" x="0.6875" y="1.0"/>
       <color-var domain="Queue" name="q" x="1.4375" y="33.0"/>
       <color-class definition="Node * Application * Queue " name="N_A_Q" x="0.8125" y="6.9375"/>
-      <transition delay="Call[&quot;IO_end_general&quot;]" name="IO_end" nservers-x="0.5" type="EXP" x="32.55" y="15.0"/>
+      <transition delay="Call[&quot;IO_end_general&quot;,FromTimeTable[&quot;IO_end&quot;, 0, 0]]" name="IO_end" nservers-x="0.5" type="EXP" x="32.55" y="15.0"/>
       <place domain="N_A_S" label-x="-1.5" label-y="-1.5" name="StateRunning" x="8.0" y="19.0"/>
-      <transition delay="If[x in MPI ,Call[&quot;State_start_mpi_general&quot;], Call[&quot;State_start_other_general&quot;]]" label-y="1.5" name="State_start" nservers-x="0.5" type="EXP" x="15.55" y="24.0"/>
-      <transition delay="If[x in MPI ,Call[&quot;State_end_mpi_general&quot;], Call[&quot;State_end_other_general&quot;]]" label-y="1.5" name="State_end" nservers-x="0.5" type="EXP" x="15.55" y="14.0"/>
+      <transition delay="If[x in MPI ,Call[&quot;State_start_mpi_general&quot;,FromTimeTable[&quot;State_start&quot;, 0, 0]], Call[&quot;State_start_other_general&quot;,FromTimeTable[&quot;State_start&quot;, 0, 0]]]" label-y="1.5" name="State_start" nservers-x="0.5" type="EXP" x="15.55" y="24.0"/>
+      <transition delay="If[x in MPI ,Call[&quot;State_end_mpi_general&quot;,FromTimeTable[&quot;State_end&quot;, 0, 0]], Call[&quot;State_end_other_general&quot;,FromTimeTable[&quot;State_end&quot;, 0, 0]]]" label-y="1.5" name="State_end" nservers-x="0.5" type="EXP" x="15.55" y="14.0"/>
       <place label-x="2.5" label-y="0.0" marking="30" name="Servers" x="48.0" y="15.0"/>
       <place domain="N_A_Q" label-x="0.5" label-y="-1.5" name="IORunning" x="39.0" y="15.0"/>
-      <transition delay="Call[&quot;IO_start_general&quot;]" guard-x="-3.5" guard-y="0.5" label-x="-2.0" label-y="-1.0" name="IO_start" nservers-x="0.5" rotation="4.71238898038469" type="EXP" x="39.55" y="19.0"/>
+      <transition delay="Call[&quot;IO_start_general&quot;,FromTimeTable[&quot;IO_start&quot;, 0, 0]]" guard-x="-3.5" guard-y="0.5" label-x="-2.0" label-y="-1.0" name="IO_start" nservers-x="0.5" rotation="4.71238898038469" type="EXP" x="39.55" y="19.0"/>
       <place domain="Queue" label-x="3.0" marking="1&lt;Q0&gt;" name="QueueRemove" x="48.0" y="19.0"/>
       <color-class definition="n{1..1} is Node1 " name="Node" x="1.125" y="3.0"/>
       <color-var domain="Node" name="n" x="1.3125" y="32.0"/>
@@ -26,11 +26,6 @@
       <color-class definition="Node * Application" name="N_A" x="39.5625" y="7.0"/>
       <color-var domain="Application" name="a" x="1.3125" y="36.0"/>
       <color-class definition="Node * Application * State " name="N_A_S" x="20.75" y="7.0"/>
-      <transition delay="FromTimeTable[&quot;IO_end&quot;, 0, 0]" name="T0" nservers-x="0.5" type="EXP" x="19.55" y="39.0"/>
-      <transition delay="FromTimeTable[&quot;IO_queue&quot;, 0, 0]" name="T1" nservers-x="0.5" type="EXP" x="20.55" y="39.0"/>
-      <transition delay="FromTimeTable[&quot;State_start&quot;, 0, 0]" name="copy_T1" nservers-x="0.5" type="EXP" x="22.55" y="41.0"/>
-      <transition delay="FromTimeTable[&quot;IO_start&quot;, 0, 0]" name="copy_copy_T1" nservers-x="0.5" type="EXP" x="18.55" y="42.0"/>
-      <transition delay="FromTimeTable[&quot;State_end&quot;, 0, 0]" name="copy_copy_copy_T1" nservers-x="0.5" type="EXP" x="13.55" y="41.0"/>
       <place domain="N_A_S" name="Call_Counts" x="8.0" y="24.0"/>
       <place domain="N_A" name="IOps" x="33.0" y="19.0"/>
     </nodes>

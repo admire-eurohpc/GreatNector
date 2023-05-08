@@ -46,8 +46,3 @@ IO_start_a_app1_n_n1_q_q11	15
 IO_start_a_app1_n_n1_q_q21	16
 IO_start_a_app1_n_n1_q_q31	17
 IO_start_a_app1_n_n1_q_q41	18
-T0	19
-T1	20
-copy_T1	21
-copy_copy_T1	22
-copy_copy_copy_T1	23
