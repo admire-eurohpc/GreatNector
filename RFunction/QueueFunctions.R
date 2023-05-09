@@ -33,7 +33,7 @@ TimeTable_generation = function(optim_v=NULL, pathReference, indexes ){
 
 error<-function(reference, output)
 {
-  colnames(reference) = c("GPU" ,"MPI", "OTHER", "IO")
+  colnames(reference) = c("Time", "Cluster", "io_p","iops","mpi_hit","mpi_p","InterTims")
   
   n_sim_tot<-table(output$Time)
   n_sim <- n_sim_tot[1]
@@ -45,40 +45,82 @@ error<-function(reference, output)
   
   ### Let's calculate the mean and median time the token stays in the place
   unit.time =  unique(diff(output[output$ID == 1, "Time"]))
-  interval.time = 60 * unit.time 
+  interval.time = 100 * unit.time 
   output$IntervalTime = output$Time %/% interval.time
-  # tolgo intervlli di tempi non multipli di quello definito
+  
+  # tolgo intervalli di tempi non multipli di quello definito
   n_int_tot<-table(output$IntervalTime)
   time_delete<-as.numeric(names(n_int_tot[n_int_tot!=n_int_tot[1]]))
   if(length(time_delete)!=0) output = output[which(output$IntervalTime!=time_delete),]
   
-  output.final <-  sapply(unique(output$ID),function(i){
-    out.tmp = output[output$ID == i, ]
+  processes = output[1,"SystemProcesses_n1_app1"]
+  
+  IORunning = grep("IORunning",colnames(output),value = T)
+  output$IORunning = rowSums(output[,IORunning])
+  trace=output[,c("ID","Time","IntervalTime",
+                  "StateRunning_n1_app1_mpi2","StateRunning_n1_app1_other3",
+                  "IOps_n1_app1","Call_Counts_n1_app1_mpi2",
+                  "IORunning")]
+  
+  traceRef = data.frame(
+    t(
+      sapply(unique(trace$IntervalTime),function(i){
+        
+        trace.tmp = trace[trace$IntervalTime == i,-which(colnames(trace) %in% c("Time","IntervalTime","IOps_n1_app1","Call_Counts_n1_app1_mpi2"))]
+        
+        trace.tmp = do.call("rbind",
+                            lapply(unique(trace.tmp$ID),function(ii){
+                              trace.tmp2 = trace.tmp[trace.tmp$ID == ii, -which(colnames(trace.tmp) == "ID")]
+                              trace.tmp2[trace.tmp2 != 0] = 1
+                              apply(trace.tmp2,2,sum)/length(trace.tmp2[,1])*100
+                            })
+        )
+        
+        trace.tmp = apply(trace.tmp,2,mean)
+        trace.tmp["Time"] = i
+        return(trace.tmp)
+      })
+    )
+  )
+  
+  traceCall = do.call( "rbind", 
+                       lapply(unique(trace$IntervalTime),function(i){
+                         trace.tmp = trace[trace$IntervalTime == i,which(colnames(trace) %in% c("ID","Call_Counts_n1_app1_mpi2","IOps_n1_app1"))]
+                         
+                         trace.tmp = do.call("rbind",
+                                             lapply(unique(trace.tmp$ID),function(ii){
+                                               trace.tmp2 = trace.tmp[trace.tmp$ID == ii, -which(colnames(trace.tmp) == "ID")]
+                                               trace.tmp2[length(trace.tmp2[,1]),]
+                                             })
+                         )
+                         
+                         trace.tmp = apply(trace.tmp,2,mean)
+                         return(trace.tmp)
+                       })
+  )
+  
+  traceRef$IOps =  c( traceCall[1,"IOps_n1_app1"] , diff(unlist(traceCall[,"IOps_n1_app1"]) ))
+  traceRef$CallMPI =  c( traceCall[1,"Call_Counts_n1_app1_mpi2"] , diff(unlist(traceCall[,"Call_Counts_n1_app1_mpi2"]) ))
+  
+  err = sapply(1:length(reference$Time), function(t){
+    if(t == 1){
+      subTrace = traceRef[traceRef$Time <= reference$Time[t], ]
+    }else{
+      subTrace = traceRef[traceRef$Time > reference$Time[t-1] & traceRef$Time <= reference$Time[t] ,]
+    }
     
-    SpendingTime = sapply(colnames(out.tmp)[-which( colnames(out.tmp)%in% c("ID","Time","IntervalTime"))],function(c)
-    {
-      
-      MeanUsageTime = sapply(unique(out.tmp$IntervalTime), function(it) 
-        sum(out.tmp[out.tmp$IntervalTime == it,c])/interval.time
-      )
-      
-      mean(MeanUsageTime)
-      #r = rle(out.tmp[,c])
-      #index0 = which(r[[2]] == 1)
-      #time = r[[1]][index1]/sum(r[[1]][index1])
-      #mean(time)
-    })
+    mean(
+      (subTrace$IOps - reference$iops[t])^2 +
+        (subTrace$CallMPI - reference$mpi_hit[t])^2 +
+        (subTrace$StateRunning_n1_app1_mpi2 - reference$mpi_p[t])^2 + 
+        (subTrace$IORunning - reference$io_p[t])^2
+    )
     
-    return(SpendingTime)
   })
-  
-  MeanTime = apply(output.final,1,mean)
-  
-  err = sum(abs(MeanTime[names(MeanTime)] - reference[,names(MeanTime)])*10)
+  err = mean(err,na.rm = T)
   
   return(err)
 }
-
 # output <- read.csv("HPCmodel_calibration/HPCmodel-calibration-7206.trace",sep = "")
 # reference <- as.data.frame(t(read.csv("Input/ReferenceCl1.csv", header = FALSE, sep = "")))
 

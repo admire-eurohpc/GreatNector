@@ -38,7 +38,9 @@ reference.generation = function(x,path){
     dplyr::select(-Diff) %>%
     tidyr::spread(key = Jobs, value = Value) %>%
     mutate(InterTims = Time - lag(Time, default = 0))
-  saveRDS(dfsimple,file = paste0("Input/Reference/",x))
+  
+  write.table(t(dfsimple),file = paste0("Input/Reference/",x) ,sep = " ",row.names = F,col.names = F) 
+  saveRDS(dfsimple,file = paste0("Input/Reference/",gsub(x,pattern=".csv",replace=""),".RDs"))
 }
 
 #files = list.files(path = "~/Desktop/GIT/Modelli_GreatMod/HPCmodel/SystemPointView/Data/QuantumEspresso/",pattern = "*.csv")

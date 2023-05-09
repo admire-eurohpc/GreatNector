@@ -17,12 +17,14 @@ ModelAnalysisPlot <-function(tracefile,referencefile = NULL,Namefile = ""){
   trace$ID <- rep(1:n_sim_tot[[1]], each = length(unique(trace$Time)) )
   
   # Reference!!!!
-  # library(readr)
-  # 
-  # reference <- as.data.frame(t(read.csv(referencefile, header = FALSE, sep = "")))
-  # colnames(reference) = c("GPU" ,"MPI", "OTHER", "IO")
-  # 
-  # reference = reference %>% tidyr::gather(key = "Jobs", value = "Value")
+  if(!is.null(referencefile)){
+    library(readr)
+    
+    reference <- as.data.frame(t(read.csv(referencefile, header = FALSE, sep = "")))
+    colnames(reference) = c("Time", "Cluster", "io_p","iops","mpi_hit","mpi_p","InterTims")
+    
+    reference = reference %>% tidyr::gather(key = "Jobs", value = "Value")
+  }
   # 
   ###
   ### Let's calculate the mean and median time the token stays in the place
