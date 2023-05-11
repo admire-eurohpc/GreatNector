@@ -13,17 +13,18 @@ double IO_queue_general(double *Value,
                         const vector<string> & NameTrans,
                         const struct InfTr* Trans,
                         const int T,
-                        const double& time) {
+                        const double& time,
+                        double rateFromTimeTable) {
   
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[IO_queue].getConstantFromTimeTable(time/100, 0);
+  // double rate = class_files[IO_queue].getConstantFromTimeTable(time, 0);
   // cout << "time:" << time << "rate:" << rate << endl;
   
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
     intensity *= pow(Value[Trans[T].InPlaces[k].Id],Trans[T].InPlaces[k].Card);  
   } 
-  rate = rate * intensity; 
+  double rate = rateFromTimeTable * intensity; 
   return (rate);
 }
 
@@ -34,16 +35,17 @@ double IO_end_general(double *Value,
                       const vector<string> & NameTrans,
                       const struct InfTr* Trans,
                       const int T,
-                      const double& time) {
+                      const double& time,
+                      double rateFromTimeTable) {
   
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[IO_end].getConstantFromTimeTable(time/100, 0);
+  // double rate = class_files[IO_end].getConstantFromTimeTable(time, 0);
   // cout << "rate:" << rate << endl;
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
     intensity *= pow(Value[Trans[T].InPlaces[k].Id],Trans[T].InPlaces[k].Card);  
   } 
-  rate = rate * intensity; 
+  double rate = rateFromTimeTable * intensity; 
   return (rate);
 }
 
@@ -54,15 +56,17 @@ double State_start_mpi_general(double *Value,
                                const vector<string> & NameTrans,
                                const struct InfTr* Trans,
                                const int T,
-                               const double& time) {
+                               const double& time,
+                               double rateFromTimeTable) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_start].getConstantFromTimeTable(time/100, 0);
+  // double rate = class_files[State_start].getConstantFromTimeTable(time, 0);
   // cout << "rate:" << rate << endl;
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
     intensity *= pow(Value[Trans[T].InPlaces[k].Id],Trans[T].InPlaces[k].Card);  
   } 
-  rate = rate * intensity; 
+  
+  double rate = rateFromTimeTable * intensity; 
   return (rate);
 }
 
@@ -72,16 +76,18 @@ double State_start_other_general(double *Value,
                                  const vector<string> & NameTrans,
                                  const struct InfTr* Trans,
                                  const int T,
-                                 const double& time) {
+                                 const double& time,
+                                 double rateFromTimeTable) {
+  
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_start].getConstantFromTimeTable(time/100, 1);
+  // double rate = class_files[State_start].getConstantFromTimeTable(time, 1);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
     intensity *= pow(Value[Trans[T].InPlaces[k].Id],Trans[T].InPlaces[k].Card);  
   } 
-  rate = rate * intensity; 
+  double rate = rateFromTimeTable * intensity; 
   return (rate);
 }
 
@@ -91,16 +97,17 @@ double State_end_mpi_general(double *Value,
                              const vector<string> & NameTrans,
                              const struct InfTr* Trans,
                              const int T,
-                             const double& time) {
+                             const double& time,
+                             double rateFromTimeTable) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_end].getConstantFromTimeTable(time/100, 0);
+  // double rate = class_files[State_end].getConstantFromTimeTable(time, 0);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
     intensity *= pow(Value[Trans[T].InPlaces[k].Id],Trans[T].InPlaces[k].Card);  
   } 
-  rate = rate * intensity; 
+  double rate = rateFromTimeTable * intensity; 
   return (rate);
 }
 
@@ -110,16 +117,17 @@ double State_end_other_general(double *Value,
                                const vector<string> & NameTrans,
                                const struct InfTr* Trans,
                                const int T,
-                               const double& time) {
+                               const double& time,
+                               double rateFromTimeTable) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_end].getConstantFromTimeTable(time/100, 1);
+  // double rate = class_files[State_end].getConstantFromTimeTable(time, 1);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
     intensity *= pow(Value[Trans[T].InPlaces[k].Id],Trans[T].InPlaces[k].Card);  
   } 
-  rate = rate * intensity; 
+  double rate = rateFromTimeTable * intensity; 
   return (rate);
 }
 
@@ -129,16 +137,17 @@ double IO_start_general(double *Value,
                         const vector<string> & NameTrans,
                         const struct InfTr* Trans,
                         const int T,
-                        const double& time) {
+                        const double& time,
+                        double rateFromTimeTable) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[IO_start].getConstantFromTimeTable(time/100, 0);
+  // double rate = class_files[IO_start].getConstantFromTimeTable(time, 0);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
     intensity *= pow(Value[Trans[T].InPlaces[k].Id],Trans[T].InPlaces[k].Card);  
   } 
-  rate = rate * intensity; 
+  double rate = rateFromTimeTable * intensity; 
   return (rate);
 }
 

@@ -1,0 +1,297 @@
+
+
+--------------------------------------------------------------------
+                      Generation ODE/SDE model
+--------------------------------------------------------------------
+
+
+
+Compiling general transition file
+
+SAVING TIME: 0.025
+
+#Computing p-semiflows and place bounds: 
+/usr/local/GreatSPN/bin/PN2ODE /home/queueHPCmodel_unf -M
+
+
+ =========================================================
+|	      	        PN to ODE        	          |
+ =========================================================
+
+ If you find any bug, send an email to beccuti@di.unito.it!
+Transition IO_queue_a_app1_n_n1_q_q01 has function:  Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+Transition IO_queue_a_app1_n_n1_q_q11 has function:  Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+Transition IO_queue_a_app1_n_n1_q_q21 has function:  Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+Transition IO_queue_a_app1_n_n1_q_q31 has function:  Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+Transition IO_queue_a_app1_n_n1_q_q41 has function:  Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+Transition IO_end_a_app1_n_n1_q_q01 has function:  Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+Transition IO_end_a_app1_n_n1_q_q11 has function:  Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+Transition IO_end_a_app1_n_n1_q_q21 has function:  Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+Transition IO_end_a_app1_n_n1_q_q31 has function:  Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+Transition IO_end_a_app1_n_n1_q_q41 has function:  Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+Transition State_start_a_app1_n_n1_x_mpi2 has function:  Call["State_start_mpi_general", FromTimeTable["State_start", 0, 0]]
+
+Transition State_start_a_app1_n_n1_x_other3 has function:  Call["State_start_other_general", FromTimeTable["State_start", 0, 0]]
+
+Transition State_end_a_app1_n_n1_x_mpi2 has function:  Call["State_end_mpi_general", FromTimeTable["State_end", 0, 0]]
+
+Transition State_end_a_app1_n_n1_x_other3 has function:  Call["State_end_other_general", FromTimeTable["State_end", 0, 0]]
+
+Transition IO_start_a_app1_n_n1_q_q01 has function:  Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+Transition IO_start_a_app1_n_n1_q_q11 has function:  Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+Transition IO_start_a_app1_n_n1_q_q21 has function:  Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+Transition IO_start_a_app1_n_n1_q_q31 has function:  Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+Transition IO_start_a_app1_n_n1_q_q41 has function:  Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+
+
+------------------------------------------------
+               Start  encoding
+------------------------------------------------
+
+Opening file: /home/queueHPCmodel_unf.bnd
+Opening file: /home/queueHPCmodel_unf.pin
+Warning: it is not possible to open input file .bnd
+
+
+
+START EXECUTION...
+Warning: it is not possible to open input file .pin
+
+Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+ stoken è Call["IO_queue_general",
+Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+ stoken è Call["IO_queue_general",
+Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+ stoken è Call["IO_queue_general",
+Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+ stoken è Call["IO_queue_general",
+Call["IO_queue_general", FromTimeTable["IO_queue", 0, 0]]
+
+ stoken è Call["IO_queue_general",
+Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+ stoken è Call["IO_end_general",
+Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+ stoken è Call["IO_end_general",
+Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+ stoken è Call["IO_end_general",
+Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+ stoken è Call["IO_end_general",
+Call["IO_end_general", FromTimeTable["IO_end", 0, 0]]
+
+ stoken è Call["IO_end_general",
+Call["State_start_mpi_general", FromTimeTable["State_start", 0, 0]]
+
+ stoken è Call["State_start_mpi_general",
+Call["State_start_other_general", FromTimeTable["State_start", 0, 0]]
+
+ stoken è Call["State_start_other_general",
+Call["State_end_mpi_general", FromTimeTable["State_end", 0, 0]]
+
+ stoken è Call["State_end_mpi_general",
+Call["State_end_other_general", FromTimeTable["State_end", 0, 0]]
+
+ stoken è Call["State_end_other_general",
+Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+ stoken è Call["IO_start_general",
+Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+ stoken è Call["IO_start_general",
+Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+ stoken è Call["IO_start_general",
+Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+ stoken è Call["IO_start_general",
+Call["IO_start_general", FromTimeTable["IO_start", 0, 0]]
+
+ stoken è Call["IO_start_general",
+
+	Warning: no imlicit places are considered.
+
+	Done.
+
+------------------------------------------------
+                 End encoding
+------------------------------------------------
+
+
+===================== INFO =====================
+ Total Time: 0.002414 sec
+ Total Used Memory: 3712KB
+ Output saved in: queueHPCmodel_unf.cpp
+================================================
+
+
+/home/queueHPCmodel_unf
+#cd /usr/local/GreatSPN/scripts/../inst_src
+#Copying file form /usr/local/GreatSPN/scripts/../inst_src to /tmp/tmp.HVKuUrf4ek
+
+#cat /tmp/tmp.HVKuUrf4ek/tmpB /tmp/tmp.HVKuUrf4ek/incl1  /home/docker/gen_tran_out.cpp  /tmp/tmp.HVKuUrf4ek/tmpE >> /tmp/tmp.HVKuUrf4ek/tmpA
+FuncT
+#cat /tmp/tmp.HVKuUrf4ek/tmpA >>  /tmp/tmp.HVKuUrf4ek/class.cpp
+
+#cd /tmp/tmp.HVKuUrf4ek
+
+#Compiling ... 
+g++ -I./  -o  /home/queueHPCmodel_unf.solver  /home/queueHPCmodel_unf.cpp  ./class.cpp  ./lsode.cpp ./readSupport.cpp  -O3 -std=c++11 -lm -Wall
+./class.cpp: In function ‘double SDE::IO_queue_a_app1_n_n1_q_q01_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4148:34: error: too many arguments to function ‘double SDE::IO_queue_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4148 |    double rate = IO_queue_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_queue].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:3993:8: note: declared here
+ 3993 | double IO_queue_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_queue_a_app1_n_n1_q_q11_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4160:34: error: too many arguments to function ‘double SDE::IO_queue_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4160 |    double rate = IO_queue_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_queue].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:3993:8: note: declared here
+ 3993 | double IO_queue_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_queue_a_app1_n_n1_q_q21_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4172:34: error: too many arguments to function ‘double SDE::IO_queue_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4172 |    double rate = IO_queue_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_queue].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:3993:8: note: declared here
+ 3993 | double IO_queue_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_queue_a_app1_n_n1_q_q31_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4184:34: error: too many arguments to function ‘double SDE::IO_queue_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4184 |    double rate = IO_queue_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_queue].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:3993:8: note: declared here
+ 3993 | double IO_queue_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_queue_a_app1_n_n1_q_q41_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4196:34: error: too many arguments to function ‘double SDE::IO_queue_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4196 |    double rate = IO_queue_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_queue].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:3993:8: note: declared here
+ 3993 | double IO_queue_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_end_a_app1_n_n1_q_q01_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4208:32: error: too many arguments to function ‘double SDE::IO_end_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4208 |    double rate = IO_end_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_end].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4014:8: note: declared here
+ 4014 | double IO_end_general(double *Value,
+      |        ^~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_end_a_app1_n_n1_q_q11_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4220:32: error: too many arguments to function ‘double SDE::IO_end_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4220 |    double rate = IO_end_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_end].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4014:8: note: declared here
+ 4014 | double IO_end_general(double *Value,
+      |        ^~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_end_a_app1_n_n1_q_q21_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4232:32: error: too many arguments to function ‘double SDE::IO_end_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4232 |    double rate = IO_end_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_end].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4014:8: note: declared here
+ 4014 | double IO_end_general(double *Value,
+      |        ^~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_end_a_app1_n_n1_q_q31_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4244:32: error: too many arguments to function ‘double SDE::IO_end_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4244 |    double rate = IO_end_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_end].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4014:8: note: declared here
+ 4014 | double IO_end_general(double *Value,
+      |        ^~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_end_a_app1_n_n1_q_q41_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4256:32: error: too many arguments to function ‘double SDE::IO_end_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4256 |    double rate = IO_end_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_end].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4014:8: note: declared here
+ 4014 | double IO_end_general(double *Value,
+      |        ^~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::State_start_a_app1_n_n1_x_mpi2_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4268:41: error: too many arguments to function ‘double SDE::State_start_mpi_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4268 |    double rate = State_start_mpi_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[State_start].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4034:8: note: declared here
+ 4034 | double State_start_mpi_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::State_start_a_app1_n_n1_x_other3_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4280:43: error: too many arguments to function ‘double SDE::State_start_other_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4280 |    double rate = State_start_other_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[State_start].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4052:8: note: declared here
+ 4052 | double State_start_other_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::State_end_a_app1_n_n1_x_mpi2_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4292:39: error: too many arguments to function ‘double SDE::State_end_mpi_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4292 |    double rate = State_end_mpi_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[State_end].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4072:8: note: declared here
+ 4072 | double State_end_mpi_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::State_end_a_app1_n_n1_x_other3_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4304:41: error: too many arguments to function ‘double SDE::State_end_other_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4304 |    double rate = State_end_other_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[State_end].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4091:8: note: declared here
+ 4091 | double State_end_other_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_start_a_app1_n_n1_q_q01_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4316:34: error: too many arguments to function ‘double SDE::IO_start_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4316 |    double rate = IO_start_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_start].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4110:8: note: declared here
+ 4110 | double IO_start_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_start_a_app1_n_n1_q_q11_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4328:34: error: too many arguments to function ‘double SDE::IO_start_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4328 |    double rate = IO_start_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_start].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4110:8: note: declared here
+ 4110 | double IO_start_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_start_a_app1_n_n1_q_q21_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4340:34: error: too many arguments to function ‘double SDE::IO_start_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4340 |    double rate = IO_start_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_start].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4110:8: note: declared here
+ 4110 | double IO_start_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_start_a_app1_n_n1_q_q31_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4352:34: error: too many arguments to function ‘double SDE::IO_start_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4352 |    double rate = IO_start_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_start].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4110:8: note: declared here
+ 4110 | double IO_start_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+./class.cpp: In function ‘double SDE::IO_start_a_app1_n_n1_q_q41_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’:
+./class.cpp:4364:34: error: too many arguments to function ‘double SDE::IO_start_general(double*, std::map<std::__cxx11::basic_string<char>, int>&, std::map<std::__cxx11::basic_string<char>, int>&, const std::vector<std::__cxx11::basic_string<char> >&, const InfTr*, int, const double&)’
+ 4364 |    double rate = IO_start_general(Value, NumTrans, NumPlaces, NameTrans, Trans, T, time, class_files[IO_start].getConstantFromTimeTable(time, 0));
+      |                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./class.cpp:4110:8: note: declared here
+ 4110 | double IO_start_general(double *Value,
+      |        ^~~~~~~~~~~~~~~~
+make: *** [makefile:28: normal] Error 1
+#Error during compilation. 
+
+

@@ -1,0 +1,6 @@
+i; ini; InitGeneration; n_file="/home/docker/data/Input/placeNAMES.RDS"; applications = list(app1 = 3)
+g; IO_queue; TimeTable_generation;  indexes = list( IO_queue = c(1,2) ); pathReference = "/home/docker/data/Input/Reference/dfProva.RDs"
+g; IO_end; TimeTable_generation;  indexes = list( IO_end = c(3,4) ); pathReference = "/home/docker/data/Input/Reference/dfProva.RDs"
+g; IO_start; TimeTable_generation;  indexes = list( IO_start = c(5,6) ); pathReference = "/home/docker/data/Input/Reference/dfProva.RDs"
+g; State_start; TimeTable_generation;  indexes = list( State_start_a_app1_n_n1_x_mpi2 = c(7,8), State_start_a_app1_n_n1_x_other3 = c(9,10) ); pathReference = "/home/docker/data/Input/Reference/dfProva.RDs"
+g; State_end; TimeTable_generation;  indexes = list( State_end_a_app1_n_n1_x_mpi2 = c(11,12), State_end_a_app1_n_n1_x_other3 = c(13,14) ); pathReference = "/home/docker/data/Input/Reference/dfProva.RDs"
