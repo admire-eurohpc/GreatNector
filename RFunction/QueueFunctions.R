@@ -7,12 +7,19 @@ InitGeneration <- function(n_file,optim_v=NULL, applications)
   
   index = sample(1:length(y_ini),size = 1)
   
+  y_ini["QueueRemove_q01"] = 1
+  y_ini["QueueAdd_q01"] = 1
+  y_ini["Servers"] = 30
+  
   if( length(applications) <= length(grep(pattern = "SystemProcesses",x = yini.names)) ){
     for(i in 1:length(applications))
       y_ini[paste0("SystemProcesses_n1_app",i)] = applications[[i]]
+      
   }else{
     stop("The number of applications passed for the marking are greater than the number of colors in the App color class.")
   }
+  
+  
   
   return( y_ini )
 }
@@ -117,12 +124,13 @@ error<-function(reference, output)
     )
     
   })
+  
   err = mean(err,na.rm = T)
   
   return(err)
 }
-# output <- read.csv("HPCmodel_calibration/HPCmodel-calibration-7206.trace",sep = "")
-# reference <- as.data.frame(t(read.csv("Input/ReferenceCl1.csv", header = FALSE, sep = "")))
+# output <- read.csv("queueHPCmodel_calibration/queueHPCmodel-calibration-100.trace",sep = "")
+# reference <- as.data.frame(t(read.csv("Input/Reference/plot8Deltas.csv", header = FALSE, sep = "")))
 
 
 

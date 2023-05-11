@@ -1,4 +1,4 @@
-i; ini; InitGeneration; n_file="/home/docker/data/Input/placeNAMES.RDS"; applications = list(app1 = 3)
+i; ini; InitGeneration; n_file="/home/docker/data/Input/placeNAMES.RDS"; applications = list(app1 = 1)
 g; IO_queue; TimeTable_generation;  indexes = list( IO_queue = c(1,2,3,4,5) ); pathReference = "/home/docker/data/Input/Reference/plot8Deltas.RDs"
 g; IO_end; TimeTable_generation;  indexes = list( IO_end = c(6,7,8,9,10) ); pathReference = "/home/docker/data/Input/Reference/plot8Deltas.RDs"
 g; IO_start; TimeTable_generation;  indexes = list( IO_start = c(11,12,13,14,15) ); pathReference = "/home/docker/data/Input/Reference/plot8Deltas.RDs"

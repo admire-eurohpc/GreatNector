@@ -16,8 +16,8 @@ double IO_queue_general(double *Value,
                         const double& time) {
   
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[IO_queue].getConstantFromTimeTable(time, 0);
-  // cout << "rate:" << rate << endl;
+  double rate = class_files[IO_queue].getConstantFromTimeTable(time/100, 0);
+  // cout << "time:" << time << "rate:" << rate << endl;
   
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
@@ -37,7 +37,7 @@ double IO_end_general(double *Value,
                       const double& time) {
   
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[IO_end].getConstantFromTimeTable(time, 0);
+  double rate = class_files[IO_end].getConstantFromTimeTable(time/100, 0);
   // cout << "rate:" << rate << endl;
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
@@ -56,7 +56,7 @@ double State_start_mpi_general(double *Value,
                                const int T,
                                const double& time) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_start].getConstantFromTimeTable(time, 0);
+  double rate = class_files[State_start].getConstantFromTimeTable(time/100, 0);
   // cout << "rate:" << rate << endl;
   double intensity = 1;
   for (unsigned int k=0; k<Trans[T].InPlaces.size(); k++){ 
@@ -74,7 +74,7 @@ double State_start_other_general(double *Value,
                                  const int T,
                                  const double& time) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_start].getConstantFromTimeTable(time, 1);
+  double rate = class_files[State_start].getConstantFromTimeTable(time/100, 1);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;
@@ -93,7 +93,7 @@ double State_end_mpi_general(double *Value,
                              const int T,
                              const double& time) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_end].getConstantFromTimeTable(time, 0);
+  double rate = class_files[State_end].getConstantFromTimeTable(time/100, 0);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;
@@ -112,7 +112,7 @@ double State_end_other_general(double *Value,
                                const int T,
                                const double& time) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[State_end].getConstantFromTimeTable(time, 1);
+  double rate = class_files[State_end].getConstantFromTimeTable(time/100, 1);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;
@@ -131,7 +131,7 @@ double IO_start_general(double *Value,
                         const int T,
                         const double& time) {
   // cout << "Transition:" << NameTrans[T] << endl;
-  double rate = class_files[IO_start].getConstantFromTimeTable(time, 0);
+  double rate = class_files[IO_start].getConstantFromTimeTable(time/100, 0);
   // cout << "rate:" << rate << endl;
   
   double intensity = 1;

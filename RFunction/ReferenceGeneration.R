@@ -11,22 +11,22 @@ reference.generation = function(x,path){
     theme_minimal() +
     ggtitle("The Silhouette Plot")
   
-  print(plotSilh)
+  #print(plotSilh)
   
   NumCenters = plotSilh$data$clusters[which.max(plotSilh$data$y)]
   ProcessingTimesClustered= kmeans( ProcessingTimes,
                                     centers = NumCenters )
   traceMatrix$Cluster = ProcessingTimes$Cluster = ProcessingTimesClustered$cluster
   
-  print(
-    ggplot(
-      ProcessingTimes %>%
-        tidyr::gather(-Cluster,value = "V",key="Jobs")
-    ) +
-      geom_boxplot(aes( y = V, fill = as.factor(Cluster) ) ) +
-      theme_bw()+
-      facet_wrap( ~Jobs, scales = "free" )
-  )
+  # print(
+  #   ggplot(
+  #     ProcessingTimes %>%
+  #       tidyr::gather(-Cluster,value = "V",key="Jobs")
+  #   ) +
+  #     geom_boxplot(aes( y = V, fill = as.factor(Cluster) ) ) +
+  #     theme_bw()+
+  #     facet_wrap( ~Jobs, scales = "free" )
+  # )
   df = as.data.frame(traceMatrix) %>%
     dplyr::select(X, io_p,mpi_p,iops,mpi_hit,Cluster) %>%
     tidyr::gather(io_p, mpi_p, iops, mpi_hit ,key = "Jobs",value = "Value") %>%
@@ -39,6 +39,7 @@ reference.generation = function(x,path){
     tidyr::spread(key = Jobs, value = Value) %>%
     mutate(InterTims = Time - lag(Time, default = 0))
   
+  saveRDS(df,file = paste0("Input/Reference/CompleteTrace",gsub(x,pattern=".csv",replace=""),".RDs"))
   write.table(t(dfsimple),file = paste0("Input/Reference/",x) ,sep = " ",row.names = F,col.names = F) 
   saveRDS(dfsimple,file = paste0("Input/Reference/",gsub(x,pattern=".csv",replace=""),".RDs"))
 }

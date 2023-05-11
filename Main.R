@@ -41,14 +41,16 @@ paramsName = readRDS("Input/paramsNAMES.RDs")
 params = rep(0.001,length(paramsName) )
 names(params) = paramsName
 
-# params[c("IO_queue_app1_n1_interval1","IO_queue_app1_n1_interval2")] = c(0,0) 
+# params[c("IO_queue_app1_n1_interval1","IO_queue_app1_n1_interval2")] = c(10,10) 
 # params[c("IO_end_app1_n1_interval1","IO_end_app1_n1_interval2")] = c(0,0)
-# params[c("IO_start_app1_n1_interval1","IO_start_app1_n1_interval2")] = c(0,0)
+# params[c("IO_start_app1_n1_interval1","IO_start_app1_n1_interval2")] = c(10,10)
 # 
 # params[c("State_start_app1_n1_other3_interval1","State_start_app1_n1_other3_interval2")] = c(.6,0)
 # params[c("State_start_app1_n1_mpi2_interval1","State_start_app1_n1_mpi2_interval2")] = c(0,0.6)
 # params[c("State_end_app1_n1_other3_interval1","State_end_app1_n1_other3_interval2")] = c(0.5,0)
 # params[c("State_end_app1_n1_mpi2_interval1","State_end_app1_n1_mpi2_interval2")] = c(0,0.5)
+
+#params = as.numeric(calibration_optim_trace[1,-(1:2)])
 
 ###################################
 
@@ -57,17 +59,19 @@ names(params) = paramsName
 model.analysis(solver_fname = "./Net/queueHPCmodel.solver",
                parameters_fname = "Input/parametersList.csv",
                functions_fname = "./RFunction/QueueFunctions.R",
-               f_time = 500,
+               f_time = (maxTime)*100,
                s_time = 1,
                i_time = 0,
-               n_run = 5,
+               n_run = 100,
                solver_type = "SSA",
-               parallel_processors = 1,
+               parallel_processors = 10,
                ini_v = params)
 
 
-ModelAnalysisPlot("queueHPCmodel_analysis/queueHPCmodel-analysis-1.trace")
+pl = ModelAnalysisPlot("queueHPCmodel_analysis/queueHPCmodel-analysis-1.trace",
+                  referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs")
 
+pl
 ### Calibration 
 ref <- read.csv("Data/QuantumEspresso/plot8Deltas.csv") %>% na.omit()
 maxTime = max(ref[,"X"])
@@ -81,7 +85,7 @@ model.calibration(solver_fname = "./Net/queueHPCmodel.solver",
                   f_time = (maxTime)*100,
                   s_time = 1,
                   i_time = 0,
-                  n_run = 250,
+                  n_run = 200,
                   lb_v = rep(0,length(paramsName)),
                   ub_v = rep(1,length(paramsName)),
                   ini_v = rep(0.5,length(paramsName)),

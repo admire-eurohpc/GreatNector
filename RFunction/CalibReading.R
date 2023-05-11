@@ -1,7 +1,5 @@
-## Set the cluster traces to plot
-cl = 2
 
-calibration_optim_trace <-read.csv(paste0("./HPCmodel_calibration_CL",cl,"/HPCmodel-calibration_optim-config.csv"),
+calibration_optim_trace <-read.csv(paste0("./queueHPCmodel_calibration/queueHPCmodel-calibration_optim-config.csv"),
                                    sep = "")
 
 # Then, we read all the trajectories generated saving them in a list called
@@ -21,9 +19,11 @@ calibration_optim_trace = calibration_optim_trace[order(calibration_optim_trace$
 source('./RFunction/PlotGeneration.R')
 
 ModelAnalysisPlot(
-  tracefile = paste0("./HPCmodel_calibration_CL",cl,"/HPCmodel-calibration-",calibration_optim_trace[1,2],".trace"),
-  referencefile = paste0("Input/ReferenceCl",cl,".csv"),
-  Namefile = paste0("CL",cl)
+  tracefile = paste0("./queueHPCmodel_calibration/queueHPCmodel-calibration-",
+                     calibration_optim_trace[1,2],
+                     ".trace"),
+  referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs",
+  Namefile = "tracesCalib.pdf"
   )
 
 

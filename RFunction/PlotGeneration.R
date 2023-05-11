@@ -3,7 +3,8 @@ library(ggplot2)
 library(ggthemes)
 library(dplyr)
 
-tracefile = "queueHPCmodel_analysis/queueHPCmodel-analysis-1.trace"
+#tracefile = "queueHPCmodel_analysis/queueHPCmodel-analysis-1.trace"
+#referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs"
 
 ModelAnalysisPlot <-function(tracefile,referencefile = NULL,Namefile = ""){
   # PlaceNotToPlot = c()
@@ -18,117 +19,101 @@ ModelAnalysisPlot <-function(tracefile,referencefile = NULL,Namefile = ""){
   
   # Reference!!!!
   if(!is.null(referencefile)){
-    library(readr)
-    
-    reference <- as.data.frame(t(read.csv(referencefile, header = FALSE, sep = "")))
-    colnames(reference) = c("Time", "Cluster", "io_p","iops","mpi_hit","mpi_p","InterTims")
-    
-    reference = reference %>% tidyr::gather(key = "Jobs", value = "Value")
+    # referencefile = "~/Model_ADMIREproj/Input/Reference/CompleteTraceplot36Deltas.RDs"
+    reference <- readRDS(referencefile)
   }
-  # 
-  ###
+  
   ### Let's calculate the mean and median time the token stays in the place
+  unit.time =  unique(diff(trace[trace$ID == 1, "Time"]))
+  interval.time = 100 * unit.time 
+  trace$IntervalTime = trace$Time %/% interval.time
   
-  #unit.time =  unique(diff(trace[trace$ID == 1, "Time"]))
-  #interval.time = unit.time * 5
+  # tolgo intervalli di tempi non multipli di quello definito
+  n_int_tot<-table(trace$IntervalTime)
+  time_delete<-as.numeric(names(n_int_tot[n_int_tot!=n_int_tot[1]]))
+  if(length(time_delete)!=0) trace = trace[which(trace$IntervalTime!=time_delete),]
   
-  output.final.all <-  trace %>% 
-    tidyr::gather(-Time,-ID,key = "Jobs", value = "Value")
+  processes = trace[1,"SystemProcesses_n1_app1"]
   
-  output.final.notio <-  output.final.all  %>%
-    filter(!grepl(x = Jobs,"P1|Queue"))%>%
-    group_by(Time,ID,Jobs)%>%
-    summarise(SumValue = sum(Value))%>%
-    ungroup()
+  IORunning = grep("IORunning",colnames(trace),value = T)
+  trace$IORunning = rowSums(trace[,IORunning])
+  trace=trace[,c("ID","Time","IntervalTime",
+                 "StateRunning_n1_app1_mpi2","StateRunning_n1_app1_other3",
+                 "IOps_n1_app1","Call_Counts_n1_app1_mpi2",
+                 "IORunning")]
   
-  unique(output.final.notio$Jobs)
+  traceRef = do.call(rbind,
+                     lapply(unique(trace$IntervalTime),function(i){
+                       
+                       trace.tmp = trace[trace$IntervalTime == i,-which(colnames(trace) %in% c("Time","IntervalTime","IOps_n1_app1","Call_Counts_n1_app1_mpi2"))]
+                       
+                       trace.tmp = do.call("rbind",
+                                           lapply(unique(trace.tmp$ID),function(ii){
+                                             trace.tmp2 = trace.tmp[trace.tmp$ID == ii,-which(colnames(trace.tmp) == "ID") ]
+                                             trace.tmp2[trace.tmp2 != 0] = 1
+                                             trace.tmp2 = data.frame( t(apply(trace.tmp2,2,sum)/length(trace.tmp2[,1])*100) )
+                                             trace.tmp2$ID = ii
+                                             trace.tmp2
+                                           })
+                       )
+                       
+                       trace.mean = data.frame(t(apply(trace.tmp[,-which(colnames(trace.tmp) == "ID")],2,mean)))
+                       trace.mean$ID = 0
+                       trace.tmp$Type = "Trace"
+                       trace.mean$Type = "Mean"
+                       trace.tmp = rbind(trace.tmp,trace.mean[,colnames(trace.tmp)])
+                       
+                       trace.tmp[,"Time"] = i
+                       return(trace.tmp)
+                     })
+  )
   
-  output.final.io = output.final.all %>%
-    filter(grepl(x = Jobs,"P1|(IOQueue)")) %>%
-    mutate(Jobs = gsub(replacement = "", x = Jobs,pattern = "_q[0-9]+")) %>%
-    group_by(Time,ID,Jobs)%>%
-    summarise(SumValue = sum(Value))%>%
-    ungroup()
+  traceCall = do.call( "rbind", 
+                       lapply(unique(trace$IntervalTime),function(i){
+                         trace.tmp = trace[trace$IntervalTime == i,which(colnames(trace) %in% c("ID","Call_Counts_n1_app1_mpi2","IOps_n1_app1"))]
+                         
+                         trace.tmp = do.call("rbind",
+                                             lapply(unique(trace.tmp$ID),function(ii){
+                                               trace.tmp2 = trace.tmp[trace.tmp$ID == ii, ]
+                                               trace.tmp2[length(trace.tmp2[,1]),]
+                                             })
+                         )
+                         trace.mean = data.frame(t(apply(trace.tmp[,-which(colnames(trace.tmp) == "ID")],2,mean)))
+                         trace.mean$ID = 0
+                         trace.tmp$Type = "Trace"
+                         trace.mean$Type = "Mean"
+                         trace.tmp = rbind(trace.tmp,trace.mean[,colnames(trace.tmp)])
+                         trace.tmp[,"Time"] = i
+                         return(trace.tmp)
+                       })
+  )
   
-  unique(output.final.io$Jobs)
-
-  output.final.all = rbind(output.final.notio,output.final.io)
+  traceCall =  traceCall %>% 
+    group_by(ID) %>% 
+    mutate(IOps = IOps_n1_app1 - lag(IOps_n1_app1,default = 0),
+           CallMPI = Call_Counts_n1_app1_mpi2 -lag(Call_Counts_n1_app1_mpi2,default = 0) )
   
+  traceRef2 = merge(traceRef,traceCall)
   
-  pl = ggplot(output.final.all) +
-    geom_line(aes(x = Time,y = SumValue, group = ID,col = ID),alpha = 0.4)+
-    #geom_bar(data = reference, aes(x = "Reference", y = Value,fill = Jobs),col = "red",stat = "identity")+
-    theme(axis.text=element_text(size=10),
-          axis.title=element_text(size=14,face="bold"),
-          legend.text=element_text(size=10),
-          legend.title=element_text(size=14,face="bold"),
-          legend.position="none",
-          legend.key.size = unit(1.3, "cm"),
-          legend.key.width = unit(1.3,"cm") )+
-    labs(x="Time", y="Total number of tokenks")+
-    geom_line(data = output.final.all %>% group_by(Time,Jobs) %>%
-                summarise(MeanV = mean(SumValue)),
-              aes(x = Time,y = MeanV))+
-    facet_wrap(~Jobs)
+  traceRef2 = traceRef2 %>%
+    rename(io_p = IORunning, mpi_p = StateRunning_n1_app1_mpi2, iops = IOps, mpi_hit = CallMPI,
+           other_p = StateRunning_n1_app1_other3  ) %>%
+    dplyr::select(Time, Type, ID, io_p, mpi_p, iops, mpi_hit,other_p) %>%
+    tidyr::gather(-Time, -Type, -ID, value = "Measure", key =  "Jobs")
+  
+  reference = reference %>% dplyr::select(-Diff) %>% rename(RefValue = Value)
+  
+  pl = ggplot()+
+    geom_line(data = traceRef2 %>% filter(Type == "Mean"),aes(x = Time, y = Measure, col = Jobs))+
+    geom_line(data = traceRef2 %>% filter(Type != "Mean"),aes(x = Time, y = Measure),col = "grey",alpha = .3)+
+    geom_line(data = reference,aes(x = Time, y = RefValue), col = "black")+
+    facet_wrap(~Jobs,scales = "free",ncol = 2)+
+    theme_bw()
+  
+  if(Namefile != "")
+    ggsave(plot = pl,filename = Namefile,
+           path = "./Plots/",
+           device = "pdf",width = 10,height = 15)
   
   return(pl)
-  
-  # output.final.all <-  trace %>% 
-  #   tidyr::gather(-Time,-ID,key = "Jobs", value = "Value") %>%
-  #   group_by(ID, Jobs) %>%
-  #   #dplyr::mutate(TimeInterval = Time %/% interval.time) %>%
-  #   ungroup() %>%
-  #   #filter(TimeInterval != max(TimeInterval) ) %>%
-  #   group_by(ID, Jobs, TimeInterval) %>%
-  #   dplyr::summarise(IoRunningTime = sum(Value)/interval.time) %>%
-  #   ungroup()
-# 
-#   output.final.all %>% 
-#     group_by(ID,TimeInterval) %>%
-#     dplyr::summarise(sum = sum(MeanUsageTime)) %>%
-#     ungroup() %>%
-#     select(sum) %>%
-#     distinct()
-#   
-#   output.final = output.final.all %>%
-#     group_by(Jobs, TimeInterval) %>%
-#     dplyr::summarise(MeanTime = mean(MeanUsageTime)) %>%
-#     ungroup()
-#   
-#   output.final %>% 
-#     group_by(TimeInterval) %>%
-#     dplyr::summarise(sum = sum(MeanTime)) %>%
-#     ungroup() %>%
-#     select(sum) %>%
-#     distinct()
-#   
-#   pl = ggplot(output.final) +
-#     geom_bar(aes(x = TimeInterval,y = MeanTime,fill = Jobs),stat = "identity")+
-#     #geom_bar(data = reference, aes(x = "Reference", y = Value,fill = Jobs),col = "red",stat = "identity")+
-#     theme(axis.text=element_text(size=10),
-#           axis.title=element_text(size=14,face="bold"),
-#           legend.text=element_text(size=10),
-#           legend.title=element_text(size=14,face="bold"),
-#           legend.position="right",
-#           legend.key.size = unit(1.3, "cm"),
-#           legend.key.width = unit(1.3,"cm") )+
-#     labs(x="", y="")
-#   
-#   ggsave(pl,filename = paste0(Namefile,"_BarTraceSimulated.png"),
-#          device = "png",path = "Plots",width = 10,height = 6)
-#   
-#   pl = ggplot(output.final.all) + 
-#     geom_boxplot(aes(x =TimeInterval, group = TimeInterval,y = MeanUsageTime),col = "grey", alpha = .3) +
-#     geom_line(data = output.final, 
-#               aes(x = TimeInterval,y = MeanTime, col = Jobs,linetype = "Mean"), alpha = .9) +
-#     geom_hline(data = reference, aes(yintercept = Value,col = Jobs,linetype = "Reference"),size = 1)+
-#     facet_wrap(~Jobs) +
-#     theme_bw()
-#   
-#   pl
-#   
-#   ggsave(pl,filename = paste0(Namefile,"_LinesTraceSimulated.png"),device = "png",path = "Plots",width = 10,height = 6)
-#   
-#   
-#   return(pl)
 }
