@@ -13,10 +13,14 @@ paramenterCSV.generation = function(csvname, transitions,pathReference){
   transitionsNames = readRDS(transitions)
   index_param <<- 1
   x_names <<- ""
+  clusters = Ref$Cluster
   # TRANSITION: IO 
   SubTrans = c("IO_queue","IO_end","IO_start")
   rows = sapply(SubTrans,function(t){
-    str = paste0(t, " = c(", paste0((index_param):(index_param+numParams-1), collapse = "," ), ")" ) 
+    indexes_param <- index_param:(index_param+length(unique(clusters))-1)
+    names(indexes_param) <- unique(clusters)
+    
+    str = paste0(t, " = c(", paste0(indexes_param[clusters], collapse = "," ), ")" ) 
     
     tr = transitionsNames[grep(x = transitionsNames, pattern = paste0(t,"_") )]
     tt = unique(gsub(pattern = "(_q_q[0-9]+)",
@@ -27,9 +31,9 @@ paramenterCSV.generation = function(csvname, transitions,pathReference){
                      )
                 )
     
-    x_names[(index_param):(index_param+numParams-1)] <<- paste0(tt,"_interval",1:numParams)
-    index_param <<- index_param + numParams
+    x_names[unname(indexes_param)] <<- paste0(tt,"_c",unique(clusters))
     
+    index_param <<- max(indexes_param)+1
     str = paste0(str, collapse = ", " )
     return(
       paste0("g; ",t,
@@ -43,11 +47,15 @@ paramenterCSV.generation = function(csvname, transitions,pathReference){
   rows2 = sapply(SubTrans,function(t){
     tr = transitionsNames[grep(x = transitionsNames, pattern = paste0(t,"_") )]
     str = ""
+    
     for( i in 1:length(tr) ){
-      str[i] = paste0(tr[i], " = c(", paste0((index_param):(index_param+numParams-1), collapse = "," ), ")" ) 
+      indexes_param <- index_param:(index_param+length(unique(clusters))-1)
+      names(indexes_param) <- unique(clusters)
+      
+      str[i] = paste0(tr[i], " = c(", paste0(indexes_param[clusters], collapse = "," ), ")" ) 
       tt = gsub(replacement = "_",tr[i],pattern = "(_a_)|(_x_)|(_n_)")
-      x_names[(index_param):(index_param+numParams-1)] <<- paste0(tt,"_interval",1:numParams)
-      index_param <<- index_param + numParams
+      x_names[unname(indexes_param)] <<- paste0(tt,"_c",unique(clusters))
+      index_param <<- max(indexes_param)+1
     }
     
     str = paste0(str, collapse = ", " )

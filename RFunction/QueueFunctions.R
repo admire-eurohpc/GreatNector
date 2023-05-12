@@ -25,12 +25,12 @@ InitGeneration <- function(n_file,optim_v=NULL, applications)
 }
 
 TimeTable_generation = function(optim_v=NULL, pathReference, indexes ){
-  # pathReference = "Input/Reference/dfProva.RDs"
+  # pathReference = "Input/Reference/plot8Deltas.RDs"
   # indexes = list(State_start_mpi = c(1,2), State_start_other = c(3,4))
   # the first transition must be related to mpi!!!
   
   df = readRDS(pathReference)
-  M = data.frame(Time = df[,"Time"])
+  M = data.frame(Time = df[,"Time"]*100)
   # indexes is a list that associates the transitions with a set of indexes for the parameters.
   for(i in names(indexes)){
     M[,paste(i)] = optim_v[ indexes[[i]] ]
