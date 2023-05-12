@@ -1,15 +1,20 @@
+#include <sys/stat.h>
+#include <cstdlib>
+
 #define IO_end 0
 #define IO_queue 1
 #define IO_start 2
 #define State_end 3
 #define State_start 4
 
-
 static double prvTime=0.0;
 static unsigned int prvStateId=0;
-const double step=10.0; // unit time for the aggregation
+const double step=1.0; // unit time for the aggregation
 static double nextPoint=step;
-static ofstream out("./queueHPCmodel-analysis-00.trace",ofstream::out);
+
+static std::ofstream out("/home/docker/data/queueHPCmodel_calibration/TimePlaces/timedPlace.trace", std::ios::app);
+//static std::ofstream out("timedPlace.trace", std::ios::app);
+
 // if(!out){
 //   throw Exception("*****Error opening output file result.trace***\n\n");
 // }
@@ -59,10 +64,17 @@ double IO_queue_general(double *Value,
                         const double& time,
                         double rateFromTimeTable) {
   
+  //std::filesystem::file_status s = std::filesystem::status("/TimePlaces");
+  //if(! boost::filesystem::is_directory("/TimePlaces"))
+  //  boost::filesystem::create_directory("TimePlaces");
+  
+  system("mkdir -p /home/docker/data/queueHPCmodel_calibration/TimePlaces");
+  //system("mkdir -p ../TimePlaces");
+  
   // cout << "Transition:" << NameTrans[T] << endl;
   // double rate = class_files[IO_queue].getConstantFromTimeTable(time, 0);
   // cout << "time:" << time << "rate:" << rate << endl;
-
+  
   /****
    * Begin Computing interval time in the state
    ****/
@@ -75,7 +87,7 @@ double IO_queue_general(double *Value,
   if (time==nextPoint){
     out<<nextPoint;
     for (auto it=measure.begin(); it!=measure.end();++it){
-      out << "\t" <<it->second/step;
+      out << "\t" << it->second/step;
       it->second = 0;
     }
     out<<endl;
@@ -86,7 +98,7 @@ double IO_queue_general(double *Value,
   //updating prvStateId
   unsigned int i=0;
   for (;i<placesIndex.size()&&Value[placesIndex[i]]==0;++i);
-    prvStateId=placesIndex[i];
+  prvStateId=placesIndex[i];
   
   //updating prvTime
   prvTime=time;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- This project file has been saved by the New GreatSPN Editor, v.100 --><project name="HPCmodel" version="121">
-  <gspn name="MultiNodeQueueModel" view-rates="false">
+  <gspn name="MultiNodeQueueModel" view-rates="false" zoom="150">
     <nodes>
       <place domain="N_A_Q" label-x="4.5" label-y="0.0" name="IOQueue" x="39.0" y="24.0"/>
       <color-var domain="State" name="x" x="1.125" y="34.0"/>
@@ -27,10 +27,10 @@
       <color-var domain="Application" name="a" x="1.3125" y="36.0"/>
       <color-class definition="Node * Application * State " name="N_A_S" x="20.75" y="7.0"/>
       <place domain="N_A_S" name="Call_Counts" x="8.0" y="24.0"/>
-      <place domain="N_A" name="IOps" x="33.0" y="19.0"/>
+      <place domain="N_A" name="IOps" x="26.0" y="24.0"/>
     </nodes>
     <edges>
-      <arc head="IO_queue" kind="INPUT" mult="&lt;n,a&gt;" mult-x="0.5" tail="SystemProcesses"/>
+      <arc head="IO_queue" kind="INPUT" mult="&lt;n,a&gt;" mult-x="0.5" mult-y="-0.5" tail="SystemProcesses"/>
       <arc head="IOQueue" kind="OUTPUT" mult="&lt;n,a,q&gt;" mult-x="0.0" mult-y="0.5" tail="IO_queue"/>
       <arc head="IO_queue" kind="INPUT" mult="&lt;q&gt;" mult-k="0.50205078125" mult-x="-0.1150782524419327" mult-y="-1.1061521844475912" tail="QueueAdd">
         <point x="35.0" y="26.5"/>
@@ -62,9 +62,7 @@
         <point x="45.0" y="19.0"/>
       </arc>
       <arc head="Call_Counts" kind="OUTPUT" mult="&lt;n,a,x&gt;" mult-x="0.5" mult-y="-0.5" tail="State_start"/>
-      <arc head="IOps" kind="OUTPUT" mult="&lt;n,a&gt;" mult-k="0.5999023437500001" mult-x="0.0" mult-y="0.5" tail="IO_start">
-        <point x="34.999755859375" y="20.0"/>
-      </arc>
+      <arc head="IOps" kind="OUTPUT" mult="&lt;n,a&gt;" mult-k="0.66669921875" mult-x="0.8275390625000014" mult-y="0.5" tail="IO_queue"/>
     </edges>
   </gspn>
   <gspn name="QueueModel" view-rates="false">
