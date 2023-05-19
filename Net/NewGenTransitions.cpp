@@ -12,8 +12,8 @@ static unsigned int prvStateId=0;
 const double step=1.0; // unit time for the aggregation
 static double nextPoint=step;
 
-static std::ofstream out("/home/docker/data/queueHPCmodel_calibration/TimePlaces/timedPlace.trace", std::ios::app);
-//static std::ofstream out("timedPlace.trace", std::ios::app);
+//static std::ofstream out("/home/docker/data/queueHPCmodel_calibration/TimePlaces/timedPlace.trace", std::ios::app);
+static std::ofstream out("/home/docker/data/queueHPCmodel4analysis_analysis/timedPlace.trace", std::ios::app);
 
 // if(!out){
 //   throw Exception("*****Error opening output file result.trace***\n\n");
@@ -63,13 +63,11 @@ double IO_queue_general(double *Value,
                         const int T,
                         const double& time,
                         double rateFromTimeTable) {
-  
-  //std::filesystem::file_status s = std::filesystem::status("/TimePlaces");
-  //if(! boost::filesystem::is_directory("/TimePlaces"))
-  //  boost::filesystem::create_directory("TimePlaces");
-  
-  system("mkdir -p /home/docker/data/queueHPCmodel_calibration/TimePlaces");
-  //system("mkdir -p ../TimePlaces");
+
+  // if you run the analysis then comment the follow 2 lines:
+  //if (time==0.0)
+  //  system("mkdir -p /home/docker/data/queueHPCmodel_calibration/TimePlaces");
+  //
   
   // cout << "Transition:" << NameTrans[T] << endl;
   // double rate = class_files[IO_queue].getConstantFromTimeTable(time, 0);
@@ -98,7 +96,7 @@ double IO_queue_general(double *Value,
   //updating prvStateId
   unsigned int i=0;
   for (;i<placesIndex.size()&&Value[placesIndex[i]]==0;++i);
-  prvStateId=placesIndex[i];
+    prvStateId=placesIndex[i];
   
   //updating prvTime
   prvTime=time;

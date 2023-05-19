@@ -1,114 +1,81 @@
-library(cowplot)
 library(ggplot2)
 library(ggthemes)
 library(dplyr)
+library(readr)
 
-#tracefile = "queueHPCmodel_analysis/queueHPCmodel-analysis-1.trace"
+#tracefile = "queueHPCmodel_calibration/queueHPCmodel-calibration-1.trace"
+#timestrace = "queueHPCmodel_calibration/timedPlace-1.trace"
 #referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs"
 
-ModelAnalysisPlot <-function(tracefile,referencefile = NULL,Namefile = ""){
-  # PlaceNotToPlot = c()
-  PlaceNotToPlot = c( )
+ModelAnalysisPlot <-function(tracefile,timestrace,referencefile,Namefile = ""){
+  output <- read.csv(tracefile, sep = "")
   
-  trace=read.csv(tracefile, sep = "")
-  n_sim_tot<-table(trace$Time)
+  timedTrace = read.csv(timestrace,
+                        header = FALSE, sep = "\t")
+  
+  reference <- reference <- readRDS(referencefile)
+  
+  colnames(timedTrace) = c("Time",
+                           "IOQueue_n1_app1_q01", "IOQueue_n1_app1_q11",
+                           "IOQueue_n1_app1_q21", "IOQueue_n1_app1_q31",
+                           "IOQueue_n1_app1_q41",
+                           "SystemProcesses_n1_app1",
+                           "StateRunning_n1_app1_mpi2",
+                           "StateRunning_n1_app1_other3",
+                           "IORunning_n1_app1_q01",
+                           "IORunning_n1_app1_q11","IORunning_n1_app1_q21",
+                           "IORunning_n1_app1_q31", "IORunning_n1_app1_q41" )
+  
+  
+  n_sim_tot<-table(output$Time)
   time_delete<-as.numeric(names(n_sim_tot[n_sim_tot!=n_sim_tot[1]]))
-  if(length(time_delete)!=0) trace = trace[which(trace$Time!=time_delete),]
+  if(length(time_delete)!=0) output = output[which(output$Time!=time_delete),]
   
-  trace$ID <- rep(1:n_sim_tot[[1]], each = length(unique(trace$Time)) )
+  MeantimedTrace = timedTrace %>%
+    group_by(Time) %>%
+    summarise(across(colnames(timedTrace[,-1]), mean)) %>%
+    mutate(
+      io_p = IOQueue_n1_app1_q11+IOQueue_n1_app1_q21+
+        IOQueue_n1_app1_q31+IOQueue_n1_app1_q01+
+        IOQueue_n1_app1_q41+
+        IORunning_n1_app1_q01+
+        IORunning_n1_app1_q11+IORunning_n1_app1_q21+
+        IORunning_n1_app1_q31+IORunning_n1_app1_q41,
+      mpi_p = StateRunning_n1_app1_mpi2,
+      system_p = SystemProcesses_n1_app1,
+      other_p = StateRunning_n1_app1_other3) %>%
+    ungroup() %>%
+    dplyr::select(Time,io_p,system_p,mpi_p,other_p)
   
-  # Reference!!!!
-  if(!is.null(referencefile)){
-    # referencefile = "~/Model_ADMIREproj/Input/Reference/CompleteTraceplot36Deltas.RDs"
-    reference <- readRDS(referencefile)
-  }
+  traceRef = output %>%
+    dplyr::select(Time,IOps_n1_app1,Call_Counts_n1_app1_mpi2) %>%
+    group_by(Time) %>%
+    group_by(Time) %>%
+    summarise(IOps = mean(IOps_n1_app1),
+              CallMPI = mean(Call_Counts_n1_app1_mpi2)) %>%
+    mutate(IOps = IOps-lag(IOps) ,
+           CallMPI = CallMPI-lag(CallMPI) ) %>%
+    na.omit()
   
-  ### Let's calculate the mean and median time the token stays in the place
-  unit.time =  unique(diff(trace[trace$ID == 1, "Time"]))
-  interval.time = 100 * unit.time 
-  trace$IntervalTime = trace$Time %/% interval.time
+  traceRef2 = merge(traceRef,MeantimedTrace)%>%
+    rename( iops = IOps, mpi_hit = CallMPI ) %>%
+    mutate(mpi_p = mpi_p*100,
+           io_p = io_p*100,
+           system_p=system_p*100,
+           other_p =other_p*100) %>%
+    dplyr::select(Time, io_p, mpi_p, iops, mpi_hit,system_p,other_p) %>%
+    tidyr::gather(-Time, value = "Measure", key =  "Jobs")
   
-  # tolgo intervalli di tempi non multipli di quello definito
-  n_int_tot<-table(trace$IntervalTime)
-  time_delete<-as.numeric(names(n_int_tot[n_int_tot!=n_int_tot[1]]))
-  if(length(time_delete)!=0) trace = trace[which(trace$IntervalTime!=time_delete),]
-  
-  processes = trace[1,"SystemProcesses_n1_app1"]
-  
-  IORunning = grep("IORunning",colnames(trace),value = T)
-  trace$IORunning = rowSums(trace[,IORunning])
-  trace=trace[,c("ID","Time","IntervalTime",
-                 "StateRunning_n1_app1_mpi2","StateRunning_n1_app1_other3",
-                 "IOps_n1_app1","Call_Counts_n1_app1_mpi2",
-                 "IORunning")]
-  
-  traceRef = do.call(rbind,
-                     lapply(unique(trace$IntervalTime),function(i){
-                       
-                       trace.tmp = trace[trace$IntervalTime == i,-which(colnames(trace) %in% c("Time","IntervalTime","IOps_n1_app1","Call_Counts_n1_app1_mpi2"))]
-                       
-                       trace.tmp = do.call("rbind",
-                                           lapply(unique(trace.tmp$ID),function(ii){
-                                             trace.tmp2 = trace.tmp[trace.tmp$ID == ii,-which(colnames(trace.tmp) == "ID") ]
-                                             trace.tmp2[trace.tmp2 != 0] = 1
-                                             trace.tmp2 = data.frame( t(apply(trace.tmp2,2,sum)/length(trace.tmp2[,1])*100) )
-                                             trace.tmp2$ID = ii
-                                             trace.tmp2
-                                           })
-                       )
-                       
-                       trace.mean = data.frame(t(apply(trace.tmp[,-which(colnames(trace.tmp) == "ID")],2,mean)))
-                       trace.mean$ID = 0
-                       trace.tmp$Type = "Trace"
-                       trace.mean$Type = "Mean"
-                       trace.tmp = rbind(trace.tmp,trace.mean[,colnames(trace.tmp)])
-                       
-                       trace.tmp[,"Time"] = i
-                       return(trace.tmp)
-                     })
-  )
-  
-  traceCall = do.call( "rbind", 
-                       lapply(unique(trace$IntervalTime),function(i){
-                         trace.tmp = trace[trace$IntervalTime == i,which(colnames(trace) %in% c("ID","Call_Counts_n1_app1_mpi2","IOps_n1_app1"))]
-                         
-                         trace.tmp = do.call("rbind",
-                                             lapply(unique(trace.tmp$ID),function(ii){
-                                               trace.tmp2 = trace.tmp[trace.tmp$ID == ii, ]
-                                               trace.tmp2[length(trace.tmp2[,1]),]
-                                             })
-                         )
-                         trace.mean = data.frame(t(apply(trace.tmp[,-which(colnames(trace.tmp) == "ID")],2,mean)))
-                         trace.mean$ID = 0
-                         trace.tmp$Type = "Trace"
-                         trace.mean$Type = "Mean"
-                         trace.tmp = rbind(trace.tmp,trace.mean[,colnames(trace.tmp)])
-                         trace.tmp[,"Time"] = i
-                         return(trace.tmp)
-                       })
-  )
-  
-  traceCall =  traceCall %>% 
-    group_by(ID) %>% 
-    mutate(IOps = IOps_n1_app1 - lag(IOps_n1_app1,default = 0),
-           CallMPI = Call_Counts_n1_app1_mpi2 -lag(Call_Counts_n1_app1_mpi2,default = 0) )
-  
-  traceRef2 = merge(traceRef,traceCall)
-  
-  traceRef2 = traceRef2 %>%
-    rename(io_p = IORunning, mpi_p = StateRunning_n1_app1_mpi2, iops = IOps, mpi_hit = CallMPI,
-           other_p = StateRunning_n1_app1_other3  ) %>%
-    dplyr::select(Time, Type, ID, io_p, mpi_p, iops, mpi_hit,other_p) %>%
-    tidyr::gather(-Time, -Type, -ID, value = "Measure", key =  "Jobs")
-  
-  reference = reference %>% dplyr::select(-Diff) %>% rename(RefValue = Value)
+  reference = reference %>%
+    dplyr::select(-Diff) %>%
+    rename(RefValue = Value)
   
   pl = ggplot()+
-    geom_line(data = traceRef2 %>% filter(Type == "Mean"),aes(x = Time, y = Measure, col = Jobs))+
-    geom_line(data = traceRef2 %>% filter(Type != "Mean"),aes(x = Time, y = Measure),col = "grey",alpha = .3)+
     geom_line(data = reference,aes(x = Time, y = RefValue), col = "black")+
+    geom_line(data = traceRef2,aes(x = Time, y = Measure, col = Jobs))+
     facet_wrap(~Jobs,scales = "free",ncol = 2)+
     theme_bw()
+
   
   if(Namefile != "")
     ggsave(plot = pl,filename = Namefile,

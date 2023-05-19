@@ -22,8 +22,16 @@ ModelAnalysisPlot(
   tracefile = paste0("./queueHPCmodel_calibration/queueHPCmodel-calibration-",
                      calibration_optim_trace[1,2],
                      ".trace"),
+  timestrace = paste0("queueHPCmodel_calibration/timedPlace-",calibration_optim_trace[1,2],".trace"),
   referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs",
   Namefile = "tracesCalib.pdf"
   )
+
+
+#paramsName = readRDS("Input/paramsNAMES.RDs")
+#params <- calibration_optim_trace[1,-c(1,2)]
+#paste0("params[\"",paramsName,"\"] = ",params)
+
+
 
 
