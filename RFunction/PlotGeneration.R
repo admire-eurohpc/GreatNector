@@ -14,6 +14,7 @@ ModelAnalysisPlot <-function(tracefile,timestrace,referencefile,Namefile = ""){
                         header = FALSE, sep = "\t")
   
   reference <- reference <- readRDS(referencefile)
+  #reference$Time = reference$Time+1
   
   colnames(timedTrace) = c("Time",
                            "IOQueue_n1_app1_q01", "IOQueue_n1_app1_q11",
@@ -72,9 +73,11 @@ ModelAnalysisPlot <-function(tracefile,timestrace,referencefile,Namefile = ""){
   
   pl = ggplot()+
     geom_line(data = reference,aes(x = Time, y = RefValue), col = "black")+
+    geom_point(data = traceRef2,aes(x = Time, y = Measure, col = Jobs))+
     geom_line(data = traceRef2,aes(x = Time, y = Measure, col = Jobs))+
     facet_wrap(~Jobs,scales = "free",ncol = 2)+
-    theme_bw()
+    theme_bw()+
+    xlim(c(0,max(traceRef2$Time+1)))
 
   
   if(Namefile != "")

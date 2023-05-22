@@ -11,7 +11,8 @@ source("./RFunction/ReferenceGeneration.R")
 
 ###############################
 model.generation(net_fname = "Net/queueHPCmodel.PNPRO",
-                 transitions_fname = "Net/GenTransitions.cpp")
+                 transitions_fname = "Net/NewGenTransitions.cpp")
+
 system("mv ./queueHPCmodel.* ./Net")
 
 ### Files preparation ####
@@ -36,30 +37,45 @@ paramenterCSV.generation(csvname = "parametersList.csv",
 #########################
 
 ### Uknown parameter definition ###
+ref <- read.csv("Data/QuantumEspresso/plot8Deltas.csv") %>% 
+  na.omit()
+maxTime = max(ref[,"X"])
 
 paramsName = readRDS("Input/paramsNAMES.RDs")
-params = rep(0.001,length(paramsName) )
+params = rep(0.0,length(paramsName) )
 names(params) = paramsName
 
-# params[c("IO_queue_app1_n1_interval1","IO_queue_app1_n1_interval2")] = c(10,10) 
-# params[c("IO_end_app1_n1_interval1","IO_end_app1_n1_interval2")] = c(0,0)
-# params[c("IO_start_app1_n1_interval1","IO_start_app1_n1_interval2")] = c(10,10)
-# 
-# params[c("State_start_app1_n1_other3_interval1","State_start_app1_n1_other3_interval2")] = c(.6,0)
-# params[c("State_start_app1_n1_mpi2_interval1","State_start_app1_n1_mpi2_interval2")] = c(0,0.6)
-# params[c("State_end_app1_n1_other3_interval1","State_end_app1_n1_other3_interval2")] = c(0.5,0)
-# params[c("State_end_app1_n1_mpi2_interval1","State_end_app1_n1_mpi2_interval2")] = c(0,0.5)
+params["IO_queue_app1_n1_c1"] = 15658.29
+params["IO_end_app1_n1_c1"] = 15133856
+params["IO_start_app1_n1_c1"] = 33408435
+params["State_start_app1_n1_mpi2_c1"] = 24023.35
+params["State_start_app1_n1_other3_c1"] = 32419.64
+params["State_end_app1_n1_mpi2_c1"] = 69772.35
+params["State_end_app1_n1_other3_c1"] = 9123.807
 
-#params = as.numeric(calibration_optim_trace[1,-(1:2)])
+params["IO_queue_app1_n1_c2"] = 14805.4
+params["IO_end_app1_n1_c2"] = 14614880
+params["IO_start_app1_n1_c2"] = 33000472
+params["State_start_app1_n1_mpi2_c2"] = 22714.82
+params["State_start_app1_n1_other3_c2"] = 14851503
+params["State_end_app1_n1_mpi2_c2"] = 16886159
+params["State_end_app1_n1_other3_c2"] = 270940.3
+
+params["IO_queue_app1_n1_c3"] = 15659.17
+params["IO_end_app1_n1_c3"] = 15133855
+params["IO_start_app1_n1_c3"] = 33408436
+params["State_start_app1_n1_mpi2_c3"] = 1427731
+params["State_start_app1_n1_other3_c3"] = 26013954
+params["State_end_app1_n1_mpi2_c3"] = 69772.41
+params["State_end_app1_n1_other3_c3"] = 9124.306
+
 
 ###################################
 
-# every 100 steps we have one second!
-
-model.analysis(solver_fname = "./Net/queueHPCmodel.solver",
+model.analysis(solver_fname = "./Net/queueHPCmodel4analysis.solver",
                parameters_fname = "Input/parametersList.csv",
                functions_fname = "./RFunction/QueueFunctions.R",
-               f_time = (maxTime)*100,
+               f_time = (maxTime),
                s_time = 1,
                i_time = 0,
                n_run = 100,
@@ -68,27 +84,31 @@ model.analysis(solver_fname = "./Net/queueHPCmodel.solver",
                ini_v = params)
 
 
-pl = ModelAnalysisPlot("queueHPCmodel_analysis/queueHPCmodel-analysis-1.trace",
-                  referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs")
+pl = ModelAnalysisPlot(tracefile = "queueHPCmodel4analysis_analysis/queueHPCmodel4analysis-analysis-1.trace",
+                       timestrace = "queueHPCmodel4analysis_analysis/timedPlace.trace",
+                       referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs")
 
 pl
+
 ### Calibration 
-ref <- read.csv("Data/QuantumEspresso/plot8Deltas.csv") %>% na.omit()
-maxTime = max(ref[,"X"])
+
+paramsName = readRDS("Input/paramsNAMES.RDs")
+params = rep(0,length(paramsName) )
+names(params) = paramsName
 
 model.calibration(solver_fname = "./Net/queueHPCmodel.solver",
                   parameters_fname = "./Input/parametersList.csv",
                   functions_fname = "./RFunction/QueueFunctions.R",
                   reference_data = "./Input/Reference/plot8Deltas.csv",
                   distance_measure = "error",
-                  parallel_processors = 10,
-                  f_time = (maxTime)*100,
+                  parallel_processors = 15,
+                  f_time = (maxTime),
                   s_time = 1,
                   i_time = 0,
                   n_run = 200,
                   lb_v = rep(0,length(paramsName)),
-                  ub_v = rep(1,length(paramsName)),
-                  ini_v = rep(0.5,length(paramsName)),
+                  ub_v = rep(100,length(paramsName)),
+                  ini_v = rep(10,length(paramsName)),
                   solver_type = "SSA"
 ) #debug = T )
 

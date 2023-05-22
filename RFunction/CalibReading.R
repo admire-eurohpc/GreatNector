@@ -1,3 +1,12 @@
+#interval = "c3"
+
+source('~/Model_ADMIREproj/RFunction/PlotGeneration.R')
+
+p = list()
+Values = list()
+k = 1
+for(interval in c("c1","c2","c3")){
+setwd(dir = paste0("~/Model_ADMIREproj/Calibration/Interval_",interval,"/") )
 
 calibration_optim_trace <-read.csv(paste0("./queueHPCmodel_calibration/queueHPCmodel-calibration_optim-config.csv"),
                                    sep = "")
@@ -16,22 +25,32 @@ calibration_optim_trace = calibration_optim_trace[order(calibration_optim_trace$
 #                    calibration_optim_trace[2:length(calibration_optim_trace$distance),2],".trace"))
 
 
-source('./RFunction/PlotGeneration.R')
 
-ModelAnalysisPlot(
+pl = ModelAnalysisPlot(
   tracefile = paste0("./queueHPCmodel_calibration/queueHPCmodel-calibration-",
                      calibration_optim_trace[1,2],
                      ".trace"),
   timestrace = paste0("queueHPCmodel_calibration/timedPlace-",calibration_optim_trace[1,2],".trace"),
-  referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs",
-  Namefile = "tracesCalib.pdf"
+  referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs"
   )
 
+reference <- as.data.frame(t(read.csv(paste0("Input/Reference/",interval,"_plot8Deltas.csv"),
+                                      header = FALSE, sep = "")))
+colnames(reference) = c("Time", "Cluster", "io_p","iops","mpi_hit","mpi_p")
+reference$Time = reference$Time +1
 
-#paramsName = readRDS("Input/paramsNAMES.RDs")
-#params <- calibration_optim_trace[1,-c(1,2)]
-#paste0("params[\"",paramsName,"\"] = ",params)
+a = merge(pl$layers[[2]]$data,reference %>% tidyr::gather(-Time,-Cluster,value="RefMeasure",key = "Jobs"))
+Values[[k]] = a %>% mutate(Diff = abs(RefMeasure - Measure)^2/RefMeasure)
+
+paramsName = readRDS("Input/paramsNAMES.RDs")
+params <- calibration_optim_trace[1,-c(1,2)]
+
+p[[k]] = paste0("params[\"",grep(x=paramsName,pattern = paste0("_",interval),value = T),"\"] = ",params)
+k = k+1
+}
 
 
+do.call(rbind,Values)
 
-
+setwd("~/Model_ADMIREproj")
+write.table(unlist(p),file = "params",quote = F,row.names = F,col.names = F)
