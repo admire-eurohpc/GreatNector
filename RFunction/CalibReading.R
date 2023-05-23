@@ -40,7 +40,7 @@ colnames(reference) = c("Time", "Cluster", "io_p","iops","mpi_hit","mpi_p")
 reference$Time = reference$Time +1
 
 a = merge(pl$layers[[2]]$data,reference %>% tidyr::gather(-Time,-Cluster,value="RefMeasure",key = "Jobs"))
-Values[[k]] = a %>% mutate(Diff = abs(RefMeasure - Measure)^2/RefMeasure)
+Values[[k]] = a %>% mutate(Diff = abs(RefMeasure - Mean) )#/RefMeasure)
 
 paramsName = readRDS("Input/paramsNAMES.RDs")
 params <- calibration_optim_trace[1,-c(1,2)]
@@ -49,8 +49,7 @@ p[[k]] = paste0("params[\"",grep(x=paramsName,pattern = paste0("_",interval),val
 k = k+1
 }
 
-
-do.call(rbind,Values)
+format(do.call(rbind,Values), scientific=FALSE)
 
 setwd("~/Model_ADMIREproj")
 write.table(unlist(p),file = "params",quote = F,row.names = F,col.names = F)

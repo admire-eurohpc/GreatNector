@@ -45,29 +45,29 @@ paramsName = readRDS("Input/paramsNAMES.RDs")
 params = rep(0.0,length(paramsName) )
 names(params) = paramsName
 
-params["IO_queue_app1_n1_c1"] = 15658.29
-params["IO_end_app1_n1_c1"] = 15133856
-params["IO_start_app1_n1_c1"] = 33408435
-params["State_start_app1_n1_mpi2_c1"] = 24023.35
-params["State_start_app1_n1_other3_c1"] = 32419.64
-params["State_end_app1_n1_mpi2_c1"] = 69772.35
-params["State_end_app1_n1_other3_c1"] = 9123.807
+params["IO_queue_app1_n1_c1"] = 144655.3
+params["IO_end_app1_n1_c1"] = 301498.5
+params["IO_start_app1_n1_c1"] = 311443507
+params["State_start_app1_n1_mpi2_c1"] = 214851.3
+params["State_start_app1_n1_other3_c1"] = 185378.2
+params["State_end_app1_n1_mpi2_c1"] = 80027.6
+params["State_end_app1_n1_other3_c1"] = 4382.651
+params["IO_queue_app1_n1_c2"] = 132718.9*0.05
+params["IO_end_app1_n1_c2"] = 312562.1*0.045
+params["IO_start_app1_n1_c2"] = 91597669
+params["State_start_app1_n1_mpi2_c2"] = 144763.7
+params["State_start_app1_n1_other3_c2"] = 235967.7
 
-params["IO_queue_app1_n1_c2"] = 14805.4
-params["IO_end_app1_n1_c2"] = 14614880
-params["IO_start_app1_n1_c2"] = 33000472
-params["State_start_app1_n1_mpi2_c2"] = 22714.82
-params["State_start_app1_n1_other3_c2"] = 14851503
-params["State_end_app1_n1_mpi2_c2"] = 16886159
-params["State_end_app1_n1_other3_c2"] = 270940.3
+params["State_end_app1_n1_mpi2_c2"] = 152130
 
-params["IO_queue_app1_n1_c3"] = 15659.17
-params["IO_end_app1_n1_c3"] = 15133855
-params["IO_start_app1_n1_c3"] = 33408436
-params["State_start_app1_n1_mpi2_c3"] = 1427731
-params["State_start_app1_n1_other3_c3"] = 26013954
-params["State_end_app1_n1_mpi2_c3"] = 69772.41
-params["State_end_app1_n1_other3_c3"] = 9124.306
+params["State_end_app1_n1_other3_c2"] = 1276.057
+params["IO_queue_app1_n1_c3"] = 142632.5*0.004
+params["IO_end_app1_n1_c3"] = 2308668*0.003
+params["IO_start_app1_n1_c3"] = 292692459
+params["State_start_app1_n1_mpi2_c3"] = 28390.93
+params["State_start_app1_n1_other3_c3"] = 284585.3
+params["State_end_app1_n1_mpi2_c3"] = 195884.5
+params["State_end_app1_n1_other3_c3"] = 4998.286
 
 
 ###################################
@@ -78,37 +78,20 @@ model.analysis(solver_fname = "./Net/queueHPCmodel4analysis.solver",
                f_time = (maxTime),
                s_time = 1,
                i_time = 0,
-               n_run = 100,
+               n_run = 500,
                solver_type = "SSA",
                parallel_processors = 10,
                ini_v = params)
 
-
 pl = ModelAnalysisPlot(tracefile = "queueHPCmodel4analysis_analysis/queueHPCmodel4analysis-analysis-1.trace",
                        timestrace = "queueHPCmodel4analysis_analysis/timedPlace.trace",
                        referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs")
-
 pl
 
-### Calibration 
+a = merge(pl$layers[[2]]$data,pl$layers[[1]]$data)
+a = a %>% ungroup()%>%  mutate(Err = abs(RefValue - Mean)) 
+a %>% filter(Cluster %in% 2:3 , Jobs %in% c("mpi_p","mpi_hit"),
+             Time %in% c(10,100,101,360,340)) %>%
+  dplyr::select(Time,Jobs,Cluster,RefValue, Mean)
 
-paramsName = readRDS("Input/paramsNAMES.RDs")
-params = rep(0,length(paramsName) )
-names(params) = paramsName
-
-model.calibration(solver_fname = "./Net/queueHPCmodel.solver",
-                  parameters_fname = "./Input/parametersList.csv",
-                  functions_fname = "./RFunction/QueueFunctions.R",
-                  reference_data = "./Input/Reference/plot8Deltas.csv",
-                  distance_measure = "error",
-                  parallel_processors = 15,
-                  f_time = (maxTime),
-                  s_time = 1,
-                  i_time = 0,
-                  n_run = 200,
-                  lb_v = rep(0,length(paramsName)),
-                  ub_v = rep(100,length(paramsName)),
-                  ini_v = rep(10,length(paramsName)),
-                  solver_type = "SSA"
-) #debug = T )
-
+a %>% dplyr::group_by(Cluster) %>% summarize(Err = sum(Err) )
