@@ -1,6 +1,0 @@
-i; ini; InitGeneration; n_file="/home/docker/data/Input/placeNAMES.RDS"; applications = list(app1 = 1)
-g; IO_queue; TimeTableSingleInterv_generation;  indexes = list( IO_queue = c(1) )
-g; IO_end; TimeTableSingleInterv_generation;  indexes = list( IO_end = c(2) )
-g; IO_start; TimeTableSingleInterv_generation;  indexes = list( IO_start = c(3) )
-g; State_start; TimeTableSingleInterv_generation;  indexes = list( State_start_a_app1_n_n1_x_mpi2 = c(4), State_start_a_app1_n_n1_x_other3 = c(5) )
-g; State_end; TimeTableSingleInterv_generation;  indexes = list( State_end_a_app1_n_n1_x_mpi2 = c(6), State_end_a_app1_n_n1_x_other3 = c(7) )
