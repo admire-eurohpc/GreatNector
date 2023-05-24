@@ -3,6 +3,7 @@ library(dplyr)
 library(epimod)
 #downloadContainers()
 
+setwd("Modeling/")
 ### source all the functions ##
 source("RFunction/PlotGeneration.R")
 source("./RFunction/names.R")
@@ -31,15 +32,15 @@ name.generation(path = "Net/queueHPCmodel.PlaceTransition",out = "Input/")
 # 3. Let save the csv file that associates the rate parameter with the right transition 
 # and saves the names of the unknown parameters
 paramenterCSV.generation(csvname = "parametersList.csv",
-                         pathReference = "Input/Reference/plot8Deltas.RDs",
+                         pathReference = "Input/Reference/QE_8Deltas.RDs",
                          transitions = "Input/transitionsNAMES.RDS")
 
 #########################
 
 ### Uknown parameter definition ###
-ref <- read.csv("Data/QuantumEspresso/plot8Deltas.csv") %>% 
+ref <- read.csv("../Clustering/Data/QE_8Deltas.csv") %>% 
   na.omit()
-maxTime = max(ref[,"X"])
+maxTime = max(ref[,"ts"])
 
 paramsName = readRDS("Input/paramsNAMES.RDs")
 params = rep(0.0,length(paramsName) )
@@ -57,9 +58,7 @@ params["IO_end_app1_n1_c2"] = 312562.1*0.045
 params["IO_start_app1_n1_c2"] = 91597669
 params["State_start_app1_n1_mpi2_c2"] = 144763.7
 params["State_start_app1_n1_other3_c2"] = 235967.7
-
 params["State_end_app1_n1_mpi2_c2"] = 152130
-
 params["State_end_app1_n1_other3_c2"] = 1276.057
 params["IO_queue_app1_n1_c3"] = 142632.5*0.004
 params["IO_end_app1_n1_c3"] = 2308668*0.003
@@ -78,20 +77,13 @@ model.analysis(solver_fname = "./Net/queueHPCmodel4analysis.solver",
                f_time = (maxTime),
                s_time = 1,
                i_time = 0,
-               n_run = 500,
+               n_run = 100,
                solver_type = "SSA",
-               parallel_processors = 10,
+               parallel_processors = 2,
                ini_v = params)
 
 pl = ModelAnalysisPlot(tracefile = "queueHPCmodel4analysis_analysis/queueHPCmodel4analysis-analysis-1.trace",
                        timestrace = "queueHPCmodel4analysis_analysis/timedPlace.trace",
-                       referencefile = "Input/Reference/CompleteTraceplot8Deltas.RDs")
+                       referencefile = "Input/Reference/CompleteTraceQE_8Deltas.RDs")
 pl
 
-a = merge(pl$layers[[2]]$data,pl$layers[[1]]$data)
-a = a %>% ungroup()%>%  mutate(Err = abs(RefValue - Mean)) 
-a %>% filter(Cluster %in% 2:3 , Jobs %in% c("mpi_p","mpi_hit"),
-             Time %in% c(10,100,101,360,340)) %>%
-  dplyr::select(Time,Jobs,Cluster,RefValue, Mean)
-
-a %>% dplyr::group_by(Cluster) %>% summarize(Err = sum(Err) )
